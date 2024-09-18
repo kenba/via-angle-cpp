@@ -18,9 +18,14 @@
 /// See: [Enforcing statement order in
 /// C++](https://stackoverflow.com/a/38025837)
 template <typename T>
+#ifdef _MSC_VER
+void do_not_optimize(const T& value) {
+}
+#else
 __attribute__((always_inline)) inline void do_not_optimize(const T &value) {
   asm volatile("" : "+m"(const_cast<T &>(value)));
 }
+#endif
 
 namespace via {
 /// Calculate floating-point sum and error.

@@ -7,6 +7,7 @@
 
 cmake_minimum_required (VERSION 3.30)
 cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0167 OLD) # For MSVC
 project (via-angle-cpp)
 
 option(CODE_COVERAGE "Add gcc code coverage options." OFF)

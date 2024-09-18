@@ -62,7 +62,12 @@ BOOST_AUTO_TEST_CASE(test_two_sum_long_double) {
 
   const auto [s3, t3] = via::two_sum(0.2L, -1.0L);
   BOOST_CHECK_EQUAL(-0.800000000000000000011L, s3);
+#ifdef _MSC_VER
+  // Visual studio long double is same as double
+  BOOST_CHECK_EQUAL(5.5511151231257827e-17, t3);
+#else
   BOOST_CHECK_EQUAL(1.35525271560688054251e-20L, t3);
+#endif
 }
 //////////////////////////////////////////////////////////////////////////////
 

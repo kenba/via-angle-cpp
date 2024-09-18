@@ -211,9 +211,15 @@ BOOST_AUTO_TEST_CASE(test_spherical_adjacent_length) {
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_spherical_hypotenuse_length) {
   constexpr double zero{0.0};
-  constexpr double three{deg2rad(3.0)};
-  constexpr double four{deg2rad(4.0)};
-  constexpr double five{deg2rad(5.0)};
+#ifdef _MSC_VER
+  const double three{deg2rad(3.0)};
+  const double four{deg2rad(4.0)};
+  const double five{deg2rad(5.0)};
+#else
+  constexpr double three{ deg2rad(3.0) };
+  constexpr double four{ deg2rad(4.0) };
+  constexpr double five{ deg2rad(5.0) };
+#endif
 
   // Check abort if either a or b are negative
   // Negative length a
