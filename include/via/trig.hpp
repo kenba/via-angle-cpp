@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <optional>
+#include <ostream>
 #include <type_traits>
 #ifndef PYBIND11_VERSION_MAJOR
 #include <gsl/assert>
@@ -188,6 +189,14 @@ template <typename T>
 constexpr auto operator==(const UnitNegRange<T> &lhs,
                           const UnitNegRange<T> &rhs) noexcept -> bool {
   return lhs.v() == rhs.v();
+}
+
+/// UnitNegRange ostream << operator
+template <typename T>
+  requires std::floating_point<T>
+constexpr auto operator<<(std::ostream &os,
+                          const UnitNegRange<T> &a) -> std::ostream & {
+  return os << std::to_string(a.v());
 }
 
 /// Convert a cosine to a sine, or vice versa:

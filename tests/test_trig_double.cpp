@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(test_UnitNegRange_traits) {
   const auto one{UnitNegRange<double>(1)};
   const auto minus_one{UnitNegRange<double>(-1)};
 
-  BOOST_CHECK(one == one);
+  BOOST_CHECK_EQUAL(one, one);
   BOOST_CHECK(minus_one < one);
   BOOST_CHECK(minus_one <= one);
 
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(test_UnitNegRange_traits) {
   BOOST_CHECK(one > minus_one);
   BOOST_CHECK(one >= minus_one);
 
-  BOOST_CHECK(one == minus_one.abs());
+  BOOST_CHECK_EQUAL(one, minus_one.abs());
 }
 //////////////////////////////////////////////////////////////////////////////
 
@@ -216,9 +216,9 @@ BOOST_AUTO_TEST_CASE(test_spherical_hypotenuse_length) {
   const double four{deg2rad(4.0)};
   const double five{deg2rad(5.0)};
 #else
-  constexpr double three{ deg2rad(3.0) };
-  constexpr double four{ deg2rad(4.0) };
-  constexpr double five{ deg2rad(5.0) };
+  constexpr double three{deg2rad(3.0)};
+  constexpr double four{deg2rad(4.0)};
+  constexpr double five{deg2rad(5.0)};
 #endif
 
   // Check abort if either a or b are negative

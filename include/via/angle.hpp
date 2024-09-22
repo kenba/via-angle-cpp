@@ -77,6 +77,14 @@ constexpr auto operator==(const Degrees<T> &lhs,
   return lhs.v() == rhs.v();
 }
 
+/// Degrees ostream << operator
+template <typename T>
+  requires std::floating_point<T>
+constexpr auto operator<<(std::ostream &os,
+                          const Degrees<T> &a) -> std::ostream & {
+  return os << std::to_string(a.v());
+}
+
 /// Degrees addition operator
 template <typename T>
   requires std::floating_point<T>
@@ -159,6 +167,14 @@ constexpr auto operator==(const Radians<T> &lhs,
   return lhs.v() == rhs.v();
 }
 
+/// Radians ostream << operator
+template <typename T>
+  requires std::floating_point<T>
+constexpr auto operator<<(std::ostream &os,
+                          const Radians<T> &a) -> std::ostream & {
+  return os << std::to_string(a.v());
+}
+
 /// Radians addition operator
 template <typename T>
   requires std::floating_point<T>
@@ -201,7 +217,7 @@ public:
   constexpr Angle() noexcept = default;
 
   /// Element constructor. Sets the values.
-  /// @pre s* s + c * c = 1
+  /// @pre s * s + c * c = 1
   /// @post is_valid() == true.
   /// @param s the sine of the angle.
   /// @param c the cosine of the angle.
@@ -216,6 +232,22 @@ public:
   constexpr Angle(
       const std::tuple<trig::UnitNegRange<T>, trig::UnitNegRange<T>> &t)
       : Angle(std::get<0>(t), std::get<1>(t)) {}
+
+  /// Construct an Angle from y and x values.
+  /// Normalizes the values.
+  /// @post is_valid() == true.
+  /// @param y the y coordinate.
+  /// @param x the x coordinate.
+  constexpr Angle(const T y, const T x) : Angle() {
+    const auto length{std::hypot(y, x)};
+    if (length > std::numeric_limits<T>::epsilon()) {
+      sin_ = trig::UnitNegRange<T>::clamp(y / length);
+      cos_ = trig::UnitNegRange<T>::clamp(x / length);
+    }
+#ifndef PYBIND11_VERSION_MAJOR
+    Ensures(is_valid());
+#endif
+  }
 
   /// Degrees Constructor
   constexpr explicit Angle(const Degrees<T> degrees)
@@ -355,7 +387,7 @@ public:
     return Angle(
         trig::UnitNegRange<T>::clamp(
             std::copysign(std::sqrt(trig::sq_sine_half(cos_)), sin_.v())),
-        trig::UnitNegRange<T>::clamp(std::sqrt(trig::sq_sine_half(cos_))));
+        trig::UnitNegRange<T>::clamp(std::sqrt(trig::sq_cosine_half(cos_))));
   }
 
   /// Unary minus operator.
@@ -365,49 +397,27 @@ public:
     return Angle(-sin_, cos_);
   }
 
-  /// += operator
-  [[nodiscard("Pure Function")]]
-  constexpr auto operator+=(const Angle<T> &rhs) noexcept -> Angle<T> & {
-    sin_ = sine_sum(*this, rhs);
-    cos_ = cosine_sum(*this, rhs);
-#ifndef PYBIND11_VERSION_MAJOR
-    Ensures(is_valid());
-#endif
-    return *this;
-  }
-
-  /// -= operator
-  [[nodiscard("Pure Function")]]
-  constexpr auto operator-=(const Angle<T> &rhs) noexcept -> Angle<T> & {
-    sin_ = sine_diff(*this, rhs);
-    cos_ = cosine_diff(*this, rhs);
-#ifndef PYBIND11_VERSION_MAJOR
-    Ensures(is_valid());
-#endif
-    return *this;
-  }
-
   /// Addition operator.
   [[nodiscard("Pure Function")]]
-  constexpr friend auto operator+(Angle<T> a,
+  constexpr friend auto operator+(const Angle<T> a,
                                   const Angle<T> &b) noexcept -> Angle<T> {
-    a += b;
-    return a;
+    return Angle(sine_sum(a, b), cosine_sum(a, b));
   }
 
   /// Subtraction operator.
   [[nodiscard("Pure Function")]]
-  constexpr friend auto operator-(Angle<T> a,
+  constexpr friend auto operator-(const Angle<T> a,
                                   const Angle<T> &b) noexcept -> Angle<T> {
-    a -= b;
-    return a;
+    return Angle(sine_diff(a, b), cosine_diff(a, b));
   }
 
   /// The spaceship operator
   /// It compares whether an `Angle` is clockwise of the other `Angle` on the
   /// unit circle.
+  [[nodiscard("Pure Function")]]
   constexpr std::partial_ordering operator<=>(const Angle<T> &other) const {
-    return (other - *this).sin().v();
+    const auto delta = sine_diff(*this, other);
+    return delta <=> trig::UnitNegRange<T>(0);
   }
 };
 
@@ -418,6 +428,14 @@ template <typename T>
 constexpr auto operator==(const Angle<T> &lhs,
                           const Angle<T> &rhs) noexcept -> bool {
   return lhs.sin() == rhs.sin() && lhs.cos() == rhs.cos();
+}
+
+/// Angle ostream << operator
+template <typename T>
+  requires std::floating_point<T>
+constexpr auto operator<<(std::ostream &os,
+                          const Angle<T> &a) -> std::ostream & {
+  return os << '(' << a.sin() << ',' << a.cos() << ')';
 }
 
 /// Calculate the sine of the sum of two angles.
