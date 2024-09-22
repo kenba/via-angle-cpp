@@ -1,0 +1,24 @@
+@startuml
+
+'Copyright (c) 2024 Via Technology Ltd. All Rights Reserved.
+
+' title Angle dependancies
+
+set namespaceSeparator ::
+    class Angle {
+        - sin
+        - cos
+        --
+        + abs
+        + opposite
+        + quarter_turn_cw
+        + quarter_turn_ccw
+        + negate_cos
+        + x2
+        + half
+    }
+
+    Angle .. Degrees
+    Angle .. Radians
+    Angle *-- "2" trig::UnitNegRange
+@enduml
