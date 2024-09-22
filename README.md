@@ -50,6 +50,8 @@ using namespace via;
 namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
+constexpr auto PI_3{ trig::PI_3 <double> };
+constexpr auto SQRT3{ trig::SQRT3 <double> };
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(Test_angle)
@@ -57,12 +59,12 @@ BOOST_AUTO_TEST_SUITE(Test_angle)
 BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   const Angle angle_60(Degrees(60.0));
   BOOST_CHECK(angle_60.is_valid());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_60.sin().v());
+  BOOST_CHECK_EQUAL(SQRT3/ 2, angle_60.sin().v());
   BOOST_CHECK_EQUAL(0.5, angle_60.cos().v());
   BOOST_CHECK_EQUAL(Degrees(60.0), angle_60.to_degrees());
   // Fails because PI is irrational
-  // BOOST_CHECK_EQUAL(Radians(trig::PI_3<double>), angle_60.to_radians());
-  BOOST_CHECK_CLOSE(trig::PI_3<double>, angle_60.to_radians().v(),
+  // BOOST_CHECK_EQUAL(Radians(PI_3), angle_60.to_radians());
+  BOOST_CHECK_CLOSE(PI_3, angle_60.to_radians().v(),
                     CALCULATION_TOLERANCE);
 }
 
@@ -86,6 +88,8 @@ using namespace via;
 namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
+constexpr auto PI_6{ trig::PI_6 <double> };
+constexpr auto SQRT3{ trig::SQRT3 <double> };
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(Test_angle_difference)
@@ -94,9 +98,9 @@ BOOST_AUTO_TEST_CASE(test_Angle_difference_conversion) {
   const Angle angle_d30(Degrees(-155.0), Degrees(175.0));
   BOOST_CHECK(angle_d30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_d30.sin().v());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_d30.cos().v());
+  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_d30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_d30.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(trig::PI_6<double>), angle_d30.to_radians());
+  BOOST_CHECK_EQUAL(Radians(PI_6), angle_d30.to_radians());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

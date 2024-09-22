@@ -196,7 +196,7 @@ template <typename T>
   requires std::floating_point<T>
 constexpr auto operator<<(std::ostream &os,
                           const UnitNegRange<T> &a) -> std::ostream & {
-  return os << std::to_string(a.v());
+  return os << a.v();
 }
 
 /// Convert a cosine to a sine, or vice versa:

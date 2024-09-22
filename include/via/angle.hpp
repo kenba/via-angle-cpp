@@ -82,7 +82,7 @@ template <typename T>
   requires std::floating_point<T>
 constexpr auto operator<<(std::ostream &os,
                           const Degrees<T> &a) -> std::ostream & {
-  return os << std::to_string(a.v());
+  return os << a.v();
 }
 
 /// Degrees addition operator
@@ -172,7 +172,7 @@ template <typename T>
   requires std::floating_point<T>
 constexpr auto operator<<(std::ostream &os,
                           const Radians<T> &a) -> std::ostream & {
-  return os << std::to_string(a.v());
+  return os << a.v();
 }
 
 /// Radians addition operator

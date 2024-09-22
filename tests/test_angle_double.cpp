@@ -18,6 +18,12 @@ using namespace via;
 namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
+constexpr auto PI_2{ trig::PI_2 <double> };
+constexpr auto PI_3{ trig::PI_3 <double> };
+constexpr auto PI_4{ trig::PI_4 <double> };
+constexpr auto PI_6{ trig::PI_6 <double> };
+constexpr auto SQRT1_2{ trig::SQRT1_2 <double> };
+constexpr auto SQRT3{ trig::SQRT3 <double> };
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -108,14 +114,12 @@ BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
   BOOST_CHECK_EQUAL(1.0, one.csc().value());
   BOOST_CHECK(!one.sec());
   BOOST_CHECK_EQUAL(0.0, one.cot().value());
-  BOOST_CHECK_EQUAL(90.0, one.to_degrees().v());
-  BOOST_CHECK_EQUAL(trig::PI_2<double>, one.to_radians().v());
+  BOOST_CHECK_EQUAL(Degrees(90.0), one.to_degrees());
+  BOOST_CHECK_EQUAL(Radians(PI_2), one.to_radians());
 
   const Angle angle_m45(-EPSILON, EPSILON);
-  BOOST_CHECK_CLOSE(-trig::SQRT1_2<double>, angle_m45.sin().v(),
-                    CALCULATION_TOLERANCE);
-  BOOST_CHECK_CLOSE(trig::SQRT1_2<double>, angle_m45.cos().v(),
-                    CALCULATION_TOLERANCE);
+  BOOST_CHECK_CLOSE(-SQRT1_2, angle_m45.sin().v(), CALCULATION_TOLERANCE);
+  BOOST_CHECK_CLOSE(SQRT1_2, angle_m45.cos().v(), CALCULATION_TOLERANCE);
 
   BOOST_CHECK(angle_m45 < one);
 }
@@ -134,58 +138,57 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   BOOST_CHECK_EQUAL(-3.35e7 * EPSILON, small.sin().v());
   BOOST_CHECK_EQUAL(1.0, small.cos().v());
 
-  const Angle angle_30(Radians(trig::PI_3<double>),
-                       Radians(trig::PI_6<double>));
+  const Angle angle_30(Radians(PI_3), Radians(PI_6));
   BOOST_CHECK(angle_30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_30.sin().v());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_30.cos().v());
+  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_30.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(trig::PI_6<double>), angle_30.to_radians());
+  BOOST_CHECK_EQUAL(Radians(PI_6), angle_30.to_radians());
 
-  const Angle angle_45(Radians(trig::PI_4<double>));
+  const Angle angle_45(Radians(PI_4));
   BOOST_CHECK(angle_45.is_valid());
-  BOOST_CHECK_EQUAL(trig::SQRT1_2<double>, angle_45.sin().v());
-  BOOST_CHECK_EQUAL(trig::SQRT1_2<double>, angle_45.cos().v());
+  BOOST_CHECK_EQUAL(SQRT1_2, angle_45.sin().v());
+  BOOST_CHECK_EQUAL(SQRT1_2, angle_45.cos().v());
   BOOST_CHECK_EQUAL(Degrees(45.0), angle_45.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(trig::PI_4<double>), angle_45.to_radians());
+  BOOST_CHECK_EQUAL(Radians(PI_4), angle_45.to_radians());
 
   const Angle angle_m45(Degrees(-45.0));
   BOOST_CHECK(angle_m45.is_valid());
-  BOOST_CHECK_EQUAL(-trig::SQRT1_2<double>, angle_m45.sin().v());
-  BOOST_CHECK_EQUAL(trig::SQRT1_2<double>, angle_m45.cos().v());
+  BOOST_CHECK_EQUAL(-SQRT1_2, angle_m45.sin().v());
+  BOOST_CHECK_EQUAL(SQRT1_2, angle_m45.cos().v());
   BOOST_CHECK_EQUAL(Degrees(-45.0), angle_m45.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(-trig::PI_4<double>), angle_m45.to_radians());
+  BOOST_CHECK_EQUAL(Radians(-PI_4), angle_m45.to_radians());
 
   const Angle angle_60(Degrees(-140.0), Degrees(160.0));
   BOOST_CHECK(angle_60.is_valid());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_60.sin().v());
+  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_60.sin().v());
   BOOST_CHECK_EQUAL(0.5, angle_60.cos().v());
   BOOST_CHECK_EQUAL(Degrees(60.0), angle_60.to_degrees());
   // Fails because PI is irrational
-  // BOOST_CHECK_EQUAL(Radians(trig::PI_3<double>), angle_60.to_radians());
-  BOOST_CHECK_CLOSE(trig::PI_3<double>, angle_60.to_radians().v(),
+  // BOOST_CHECK_EQUAL(Radians(PI_3), angle_60.to_radians());
+  BOOST_CHECK_CLOSE(PI_3, angle_60.to_radians().v(),
                     CALCULATION_TOLERANCE);
 
   const Angle angle_d30(Degrees(-155.0), Degrees(175.0));
   BOOST_CHECK(angle_d30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_d30.sin().v());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_d30.cos().v());
+  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_d30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_d30.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(trig::PI_6<double>), angle_d30.to_radians());
+  BOOST_CHECK_EQUAL(Radians(PI_6), angle_d30.to_radians());
 
   const Angle angle_120(Degrees(120.0));
   BOOST_CHECK(angle_120.is_valid());
-  BOOST_CHECK_EQUAL(trig::SQRT3<double> / 2, angle_120.sin().v());
+  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_120.sin().v());
   BOOST_CHECK_EQUAL(-0.5, angle_120.cos().v());
   BOOST_CHECK_EQUAL(Degrees(120.0), angle_120.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(2 * trig::PI_3<double>), angle_120.to_radians());
+  BOOST_CHECK_EQUAL(Radians(2 * PI_3), angle_120.to_radians());
 
   const Angle angle_m120(Degrees(-120.0));
   BOOST_CHECK(angle_m120.is_valid());
-  BOOST_CHECK_EQUAL(-trig::SQRT3<double> / 2, angle_m120.sin().v());
+  BOOST_CHECK_EQUAL(-SQRT3 / 2, angle_m120.sin().v());
   BOOST_CHECK_EQUAL(-0.5, angle_m120.cos().v());
   BOOST_CHECK_EQUAL(Degrees(-120.0), angle_m120.to_degrees());
-  BOOST_CHECK_EQUAL(Radians(-2 * trig::PI_3<double>), angle_m120.to_radians());
+  BOOST_CHECK_EQUAL(Radians(-2 * PI_3), angle_m120.to_radians());
 
   const Angle angle_m140(Degrees(-140.0));
   BOOST_CHECK(angle_m140.is_valid());
