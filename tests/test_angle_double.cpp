@@ -18,12 +18,12 @@ using namespace via;
 namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
-constexpr auto PI_2{ trig::PI_2 <double> };
-constexpr auto PI_3{ trig::PI_3 <double> };
-constexpr auto PI_4{ trig::PI_4 <double> };
-constexpr auto PI_6{ trig::PI_6 <double> };
-constexpr auto SQRT1_2{ trig::SQRT1_2 <double> };
-constexpr auto SQRT3{ trig::SQRT3 <double> };
+constexpr auto PI_2{trig::PI_2<double>};
+constexpr auto PI_3{trig::PI_3<double>};
+constexpr auto PI_4{trig::PI_4<double>};
+constexpr auto PI_6{trig::PI_6<double>};
+constexpr auto SQRT1_2{trig::SQRT1_2<double>};
+constexpr auto SQRT3{trig::SQRT3<double>};
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -138,14 +138,14 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   BOOST_CHECK_EQUAL(-3.35e7 * EPSILON, small.sin().v());
   BOOST_CHECK_EQUAL(1.0, small.cos().v());
 
-  const Angle angle_30(Radians(PI_3), Radians(PI_6));
+  const Angle angle_30{Radians(PI_3), Radians(PI_6)};
   BOOST_CHECK(angle_30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_30.sin().v());
   BOOST_CHECK_EQUAL(SQRT3 / 2, angle_30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_30.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_6), angle_30.to_radians());
 
-  const Angle angle_45(Radians(PI_4));
+  const Angle angle_45{Radians(PI_4)};
   BOOST_CHECK(angle_45.is_valid());
   BOOST_CHECK_EQUAL(SQRT1_2, angle_45.sin().v());
   BOOST_CHECK_EQUAL(SQRT1_2, angle_45.cos().v());
@@ -166,8 +166,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   BOOST_CHECK_EQUAL(Degrees(60.0), angle_60.to_degrees());
   // Fails because PI is irrational
   // BOOST_CHECK_EQUAL(Radians(PI_3), angle_60.to_radians());
-  BOOST_CHECK_CLOSE(PI_3, angle_60.to_radians().v(),
-                    CALCULATION_TOLERANCE);
+  BOOST_CHECK_CLOSE(PI_3, angle_60.to_radians().v(), CALCULATION_TOLERANCE);
 
   const Angle angle_d30(Degrees(-155.0), Degrees(175.0));
   BOOST_CHECK(angle_d30.is_valid());
