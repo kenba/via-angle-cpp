@@ -18,6 +18,7 @@
 #include <ctime>
 #include <optional>
 #include <ostream>
+#include <string>
 #include <type_traits>
 #ifndef PYBIND11_VERSION_MAJOR
 #include <gsl/assert>
@@ -180,6 +181,14 @@ public:
   operator<=>(const UnitNegRange<T> &other) const {
     return v_ <=> other.v_;
   }
+
+  /// A Python representation of a UnitNegRange.
+  /// I.e.: UnitNegRange(v)
+  /// @return a string in Python repr format.
+  std::string python_repr() const {
+    return "UnitNegRange(" + std::to_string(v_) + ")";
+  }
+
 }; // UnitNegRange
 
 /// UnitNegRange equality operator

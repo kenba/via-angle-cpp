@@ -66,6 +66,13 @@ public:
   constexpr auto operator-() const noexcept -> Degrees<T> {
     return Degrees(-v_);
   }
+
+  /// A Python representation of a Degrees type.
+  /// I.e.: Degrees(v)
+  /// @return a string in Python repr format.
+  std::string python_repr() const {
+    return "Degrees( " + std::to_string(v_) + " )";
+  }
 };
 
 /// Degrees equality operator
@@ -155,6 +162,13 @@ public:
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> Radians<T> {
     return Radians(-v_);
+  }
+
+  /// A Python representation of a Radians type.
+  /// I.e.: Radians(v)
+  /// @return a string in Python repr format.
+  std::string python_repr() const {
+    return "Radians( " + std::to_string(v_) + " )";
   }
 };
 
@@ -418,6 +432,14 @@ public:
   constexpr std::partial_ordering operator<=>(const Angle<T> &other) const {
     const auto delta = sine_diff(*this, other);
     return delta <=> trig::UnitNegRange<T>(0);
+  }
+
+  /// A Python representation of an Angle type.
+  /// I.e.: Angle([sin, cos])
+  /// @return a string in Python repr format.
+  std::string python_repr() const {
+    return "Angle([ " + std::to_string(sin_.v()) + ", " +
+           std::to_string(cos_.v()) + " ])";
   }
 };
 
