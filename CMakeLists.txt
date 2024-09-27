@@ -31,7 +31,7 @@ if (INSTALL_PYTHON)
 
   pybind11_add_module(via_angle src/via_angle_python_bindings.cpp)
   target_compile_definitions(via_angle PRIVATE _USE_MATH_DEFINES)
-  target_compile_features(via_angle PRIVATE cxx_std_20)
+  target_compile_features(via_angle PRIVATE cxx_std_23)
   target_include_directories(via_angle PRIVATE
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>)
   install(TARGETS via_angle DESTINATION .)

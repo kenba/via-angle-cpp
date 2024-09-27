@@ -29,12 +29,8 @@ PYBIND11_MODULE(via_angle, m) {
 
   // Python bindings for constants
   m.attr("SQ_EPSILON") = via::SQ_EPSILON<double>;
-  m.attr("PI") = via::trig::PI<double>;
   m.attr("TAU") = via::trig::TAU<double>;
-  m.attr("PI_2") = via::trig::PI_2<double>;
   m.attr("PI_3") = via::trig::PI_3<double>;
-  m.attr("PI_4") = via::trig::PI_4<double>;
-  m.attr("PI_6") = via::trig::PI_6<double>;
   m.attr("SQRT1_2") = via::trig::SQRT1_2<double>;
   m.attr("SQRT3") = via::trig::SQRT3<double>;
   m.attr("COS_30_DEGREES") = via::trig::COS_30_DEGREES<double>;
@@ -151,6 +147,8 @@ PYBIND11_MODULE(via_angle, m) {
       .def(py::init<via::Degrees<double>, via::Degrees<double>>())
       .def(py::init<via::Radians<double>>())
       .def(py::init<via::Radians<double>, via::Radians<double>>())
+
+      .def("is_valid", &via::Angle<double>::is_valid)
 
       .def("sin", &via::Angle<double>::sin)
       .def("cos", &via::Angle<double>::cos)

@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 .cache/
+python/tests/__pycache__/
 compile_commands.json
 
 # Compiled Object files

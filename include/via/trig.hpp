@@ -38,11 +38,6 @@ constexpr long double M_PIl{3.141592653589793238462643383279502884L};
 constexpr long double M_PI_3l{1.04719755119659774615421446109316763L};
 #endif
 
-#ifndef M_PI_6l // from Rust:
-                // https://doc.rust-lang.org/stable/std/f64/consts/constant.FRAC_PI_6.html
-constexpr long double M_PI_6l{0.52359877559829887307710723054658381L};
-#endif
-
 #ifndef M_SQRT1_2 // M_SQRT1_2 is not part of the C or C++ standards:
                   // _USE_MATH_DEFINES
 constexpr double M_SQRT1_2{0.70710678118654752440};
@@ -96,7 +91,7 @@ constexpr T PI_4{PI_2<T> / 2};
 /// PI / 6 to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T PI_6{static_cast<T>(M_PI_6l)};
+constexpr T PI_6{PI_3<T> / 2};
 
 /// 1/√2 to double or long double precision of depending on T.
 template <typename T>
