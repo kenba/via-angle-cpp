@@ -37,7 +37,7 @@ using the [2Sum](https://en.wikipedia.org/wiki/2Sum) algorithm;
 [trigonometric identities](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Angle_sum_and_difference_identities);
 * and some [spherical trigonometry](https://en.wikipedia.org/wiki/Spherical_trigonometry) functions.
 
-The following example shows the `round-off error` inherent in calculating angles in `radians`.  
+The following example shows the `round-off error` inherent in calculating angles in `radians`.
 It calculates the correct sine and cosine for 60° and converts them back
 precisely to 60°, but it fails to convert them to the precise angle in `radians`: π/3.
 
@@ -71,12 +71,12 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
 BOOST_AUTO_TEST_SUITE_END()
 ```
 The following example calculates the sine and cosine between the difference
-of two angles in `degrees`: -155° - 175°.  
+of two angles in `degrees`: -155° - 175°.
 It is more accurate than calling the `Angle` `From` trait in the example above
-with the difference in `degrees`.  
+with the difference in `degrees`.
 It is particularly useful for implementing the
 [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula)
-which requires sines and cosines of both longitude and latitude differences.  
+which requires sines and cosines of both longitude and latitude differences.
 Note: in this example sine and cosine of 30° are converted precisely to π/6.
 
 ```C++
@@ -115,9 +115,9 @@ The [trig](include/via/trig.hpp) namespace contains accurate and efficient trigo
 ### Angle
 
 The `Angle` struct represents an angle by its sine and cosine instead of in
-`degrees` or `radians`, see *Figure 2*.  
+`degrees` or `radians`, see *Figure 2*.
 
-![Angle Class Diagram](docs/images/angle_class_diagram.svg)  
+![Angle Class Diagram](docs/images/angle_class_diagram.svg)
 *Figure 2 Angle Class Diagram*
 
 This representation an angle makes functions such as
@@ -127,14 +127,14 @@ and/or positions of the `sin` and `cos` values.
 
 `Angle` `Add` and `Sub` traits are implemented using
 [angle sum and difference](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Angle_sum_and_difference_identities)
-trigonometric identities, 
+trigonometric identities,
 while `Angle` [double](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Double-angle_formulae)
 and [half](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Half-angle_formulae) methods use other
 trigonometric identities.
 
 The `sin` and `cos` fields of `Angle` are `UnitNegRange`s:,
 a [newtype](https://rust-unofficial.github.io/patterns/patterns/behavioural/newtype.html)
-with values in the range -1.0 to +1.0 inclusive.  
+with values in the range -1.0 to +1.0 inclusive.
 
 # Build
 
@@ -143,9 +143,9 @@ Run `cmake` as
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 <source dir>
 ```
 
-to create `compile_commands.json` file for [clangd](https://clangd.llvm.org/).  
+to create `compile_commands.json` file for [clangd](https://clangd.llvm.org/).
 Then copy `compile_commands.json` back to <source dir> to fix incorrect `clangd` warnings.
 
 ## License
 
-`angle-rs` is provided under a BOOST license, see [LICENSE](LICENSE).
+`via-angle-cpp` is provided under a MIT license, see [LICENSE](LICENSE).
