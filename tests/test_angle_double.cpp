@@ -31,6 +31,7 @@ using namespace via;
 namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
+constexpr auto PI{trig::PI<double>};
 constexpr auto PI_2{trig::PI_2<double>};
 constexpr auto PI_3{trig::PI_3<double>};
 constexpr auto PI_4{trig::PI_4<double>};
@@ -130,6 +131,10 @@ BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
   BOOST_CHECK_EQUAL(Degrees(90.0), one.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_2), one.to_radians());
 
+  const Angle<double> m_one(0.0, -1.0);
+  BOOST_CHECK_EQUAL(Degrees(180.0), m_one.to_degrees());
+  BOOST_CHECK_EQUAL(Radians(PI), m_one.to_radians());
+
   const Angle angle_m45(-EPSILON, EPSILON);
   BOOST_CHECK_CLOSE(-SQRT1_2, angle_m45.sin().v(), CALCULATION_TOLERANCE);
   BOOST_CHECK_CLOSE(SQRT1_2, angle_m45.cos().v(), CALCULATION_TOLERANCE);
@@ -209,6 +214,13 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   BOOST_CHECK_CLOSE(-0.7660444431189781, angle_m140.cos().v(),
                     CALCULATION_TOLERANCE);
   BOOST_CHECK_EQUAL(Degrees(-140.0), angle_m140.to_degrees());
+
+  const Angle angle_180(Degrees(180.0));
+  BOOST_CHECK(angle_180.is_valid());
+  BOOST_CHECK_EQUAL(0.0, angle_180.sin().v());
+  BOOST_CHECK_EQUAL(-1.0, angle_180.cos().v());
+  BOOST_CHECK_EQUAL(Degrees(180.0), angle_180.to_degrees());
+  BOOST_CHECK_EQUAL(Radians(PI), angle_180.to_radians());
 }
 //////////////////////////////////////////////////////////////////////////////
 

@@ -181,7 +181,7 @@ public:
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> UnitNegRange<T> {
-    return UnitNegRange(-v_);
+    return UnitNegRange(T(0) - v_);
   }
 
   /// The spaceship operator
