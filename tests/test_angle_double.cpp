@@ -19,11 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-/// @file test_angle_doub;e.cpp
+/// @file test_angle_double.cpp
 /// @brief Contains unit tests for the via angle classes and functions.
 //////////////////////////////////////////////////////////////////////////////
 #include "via/angle.hpp"
-#include "via/trig.hpp"
 #include <boost/test/unit_test.hpp>
 
 using namespace via;

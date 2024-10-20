@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
-#include "trig.hpp"
+#include "angle/trig.hpp"
 
 namespace via {
 /// The difference of two angles in degrees, reduced to +/-180 degrees.

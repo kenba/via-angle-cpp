@@ -22,7 +22,7 @@
 /// @file test_trig_double.hpp
 /// @brief Contains the via::trig namespace.
 //////////////////////////////////////////////////////////////////////////////
-#include "via/trig.hpp"
+#include "via/angle/trig.hpp"
 #include <boost/test/unit_test.hpp>
 
 using namespace via::trig;
