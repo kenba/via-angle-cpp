@@ -172,19 +172,14 @@ sudo make install
 The C++ tests can be built and run using `cmake` by running:
 
 ```bash
-cmake -DINSTALL_PYTHON=OFF -DCPP_UNIT_TESTS=ON <via-angle-cpp directory>
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DINSTALL_PYTHON=OFF -DCPP_UNIT_TESTS=ON <via-angle-cpp directory>
 make
 make test
 ```
 
-#### Tools
-
-To create `compile_commands.json` file for [clangd](https://clangd.llvm.org/), run:
-
-```bash
-cmake -DINSTALL_PYTHON=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .
-sudo make install
-```
+Note: `-DCMAKE_EXPORT_COMPILE_COMMANDS=1` creates a `compile_commands.json`
+file which can be copied back into the `via-angle-cpp` directory for
+[clangd](https://clangd.llvm.org/) tools.
 
 ### Python
 
@@ -201,7 +196,7 @@ pip install ./via-angle-cpp
 In Python code import the software as `via_angle`, e.g.:
 
 ```python
-  from via_angle import Angle, Degrees, Radians 
+from via_angle import Angle, Degrees, Radians 
 ```
 
 See: [test_Angle.py](python/tests/test_Angle.py).
