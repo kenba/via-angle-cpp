@@ -20,7 +20,7 @@ The library also provides an [Angle](#angle) class which represents an angle
 by its sine and cosine as the coordinates of a
 [unit circle](https://en.wikipedia.org/wiki/Unit_circle), see *Figure 1*.
 
-![Unit circle](https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Sinus_und_Kosinus_am_Einheitskreis_1.svg/250px-Sinus_und_Kosinus_am_Einheitskreis_1.svg.png)
+![Unit circle](https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Sinus_und_Kosinus_am_Einheitskreis_1.svg/250px-Sinus_und_Kosinus_am_Einheitskreis_1.svg.png)  
 *Figure 1 Unit circle formed by cos *θ* and sin *θ**
 
 The `Angle` class enables more accurate calculations of angle rotations and
@@ -117,7 +117,7 @@ The [trig](include/via/trig.hpp) namespace contains accurate and efficient trigo
 The `Angle` struct represents an angle by its sine and cosine instead of in
 `degrees` or `radians`, see *Figure 2*.
 
-![Angle Class Diagram](docs/images/angle_class_diagram.svg)
+![Angle Class Diagram](docs/images/angle_class_diagram.svg)  
 *Figure 2 Angle Class Diagram*
 
 This representation an angle makes functions such as
@@ -136,15 +136,75 @@ The `sin` and `cos` fields of `Angle` are `UnitNegRange`s:,
 a [newtype](https://rust-unofficial.github.io/patterns/patterns/behavioural/newtype.html)
 with values in the range -1.0 to +1.0 inclusive.
 
-# Build
+## Use
 
-Run `cmake` as
-```
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 <source dir>
+The C++ software depends on the Microsoft [GSL](https://github.com/microsoft/GSL) library
+to provide [Contracts](https://isocpp.org/files/papers/P2900R6.pdf) support.  
+The C++ tests use the [boost.test](https://www.boost.org/doc/libs/1_86_0/libs/test/doc/html/boost_test/intro.html)
+library, see *Figure 3*.
+
+![Angle Dependencies](docs/images/angle_dependencies.svg)  
+*Figure 3 Angle Software Dependencies*
+
+Note: Python bindings do not require `GSL` or `boost`.
+
+### C++
+
+#### Installation
+
+The library is header only, so the library `include` directory just needs to be added to the include path.  
+Alternatively, when using [cmake](https://cmake.org/) the environment variable `ViaAngle_DIR` just needs
+to be set to the location of the `via-angle-cpp` directory; `cmake` will add it to the include path.
+
+Note: `CMakeLists.txt` is setup to install python by default, so `-DINSTALL_PYTHON=OFF`
+must be passed to `cmake` when building for C++.
+
+`cmake` can also be used to install the library to the relevant include directory on Linux/macOS.  
+In the `via-angle-cpp` directory, run:
+
+```bash
+cmake -DINSTALL_PYTHON=OFF .
+sudo make install
 ```
 
-to create `compile_commands.json` file for [clangd](https://clangd.llvm.org/).
-Then copy `compile_commands.json` back to <source dir> to fix incorrect `clangd` warnings.
+#### Tests
+
+The C++ tests can be built and run using `cmake` by running:
+
+```bash
+cmake -DINSTALL_PYTHON=OFF -DCPP_UNIT_TESTS=ON <via-angle-cpp directory>
+make
+make test
+```
+
+#### Tools
+
+To create `compile_commands.json` file for [clangd](https://clangd.llvm.org/), run:
+
+```bash
+cmake -DINSTALL_PYTHON=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .
+sudo make install
+```
+
+### Python
+
+The library uses [pybind11](https://github.com/pybind/pybind11) to provide C++ Python bindings
+and [scikit-build](https://pypi.org/project/scikit-build/) to build a python package using
+[cmake](https://cmake.org/).
+
+From the parent directory of `via-angle-cpp`:
+
+```bash
+pip install ./via-angle-cpp
+```
+
+In Python code import the software as `via_angle`, e.g.:
+
+```python
+  from via_angle import Angle, Degrees, Radians 
+```
+
+See: [test_Angle.py](python/tests/test_Angle.py).
 
 ## License
 

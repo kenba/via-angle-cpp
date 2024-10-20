@@ -100,8 +100,4 @@ endif(CPP_UNIT_TESTS)
 
 # Install headers:
 include(GNUInstallDirs)
-install(
-    DIRECTORY "include/via"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-    FILES_MATCHING PATTERN "*.hpp"
-)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}include/via" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

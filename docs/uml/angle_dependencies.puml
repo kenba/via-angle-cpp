@@ -1,0 +1,23 @@
+@startuml
+
+'Copyright (c) 2024 Via Technology Ltd. All Rights Reserved.
+
+' title Angle dependancies
+
+set namespaceSeparator ::
+    component via_angle #palegreen
+    package C++ {
+        component gsl
+        package test {
+            component boost_test
+        }
+    }
+    package python {
+        component pybind11
+    }
+    
+    via_angle -- gsl
+    via_angle --  boost_test
+    via_angle -- pybind11
+
+@enduml
