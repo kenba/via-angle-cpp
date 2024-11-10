@@ -26,7 +26,7 @@
 import pytest
 import numpy as np
 from numpy.testing import assert_almost_equal
-from via_angle import Angle, Degrees, Radians, PI_3, SQRT1_2, SQRT3, TAU
+from via_angle import Angle, Degrees, Radians, COS_30_DEGREES, PI_3, SQRT1_2, TAU
 
 EPSILON = np.finfo(float).eps
 PI_6 = PI_3 / 2.0
@@ -124,7 +124,7 @@ def test_Angle_conversion():
     angle_30 = Angle(Radians(PI_3), Radians(PI_6))
     assert angle_30.is_valid()
     assert 0.5 == angle_30.sin().v()
-    assert SQRT3 / 2.0 == angle_30.cos().v()
+    assert COS_30_DEGREES == angle_30.cos().v()
     assert Degrees(30.0) == angle_30.to_degrees()
     assert Radians(PI_6) == angle_30.to_radians()
 
@@ -144,7 +144,7 @@ def test_Angle_conversion():
 
     angle_60 = Angle(Degrees(-140.0), Degrees(160.0))
     assert angle_30.is_valid()
-    assert SQRT3 / 2.0 == angle_60.sin().v()
+    assert COS_30_DEGREES == angle_60.sin().v()
     assert 0.5 == angle_60.cos().v()
     assert Degrees(60.0) == angle_60.to_degrees()
     # Fails because PI is irrational
@@ -154,20 +154,20 @@ def test_Angle_conversion():
     angle_d30 = Angle(Degrees(-155.0), Degrees(175.0))
     assert angle_d30.is_valid()
     assert 0.5 == angle_d30.sin().v()
-    assert SQRT3 / 2.0 == angle_d30.cos().v()
+    assert COS_30_DEGREES == angle_d30.cos().v()
     assert Degrees(30.0) == angle_d30.to_degrees()
     assert Radians(PI_6) == angle_d30.to_radians()
 
     angle_120 = Angle(Degrees(120.0))
     assert angle_120.is_valid()
-    assert SQRT3 / 2.0 == angle_120.sin().v()
+    assert COS_30_DEGREES == angle_120.sin().v()
     assert -0.5 == angle_120.cos().v()
     assert Degrees(120.0) == angle_120.to_degrees()
     assert Radians(2.0 * PI_3) == angle_120.to_radians()
 
     angle_m120 = Angle(Degrees(-120.0))
     assert angle_m120.is_valid()
-    assert -SQRT3 / 2.0 == angle_m120.sin().v()
+    assert -COS_30_DEGREES == angle_m120.sin().v()
     assert -0.5 == angle_m120.cos().v()
     assert Degrees(-120.0) == angle_m120.to_degrees()
     assert Radians(-2.0 * PI_3) == angle_m120.to_radians()

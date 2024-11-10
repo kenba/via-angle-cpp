@@ -38,15 +38,15 @@ BOOST_AUTO_TEST_SUITE(Test_trig)
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_pi_functions) {
   // test double precision
-  BOOST_CHECK_EQUAL(std::acos(-1), PI<double>);
-  BOOST_CHECK_EQUAL(M_PI / 180.0, deg2rad(1.0));
-  BOOST_CHECK_EQUAL(180.0 / M_PI, rad2deg(1.0));
+  BOOST_CHECK_EQUAL(std::acos(-1), std::numbers::pi_v<double>);
+  BOOST_CHECK_EQUAL(std::numbers::pi_v<double> / 180.0, deg2rad(1.0));
+  BOOST_CHECK_EQUAL(180.0 / std::numbers::pi_v<double>, rad2deg(1.0));
 
   BOOST_CHECK_CLOSE(std::acos(-1.0L), PI<long double>,
                     4 * std::numeric_limits<long double>::epsilon());
-  BOOST_CHECK_EQUAL(M_PIl, PI<long double>);
-  BOOST_CHECK_EQUAL(M_PIl / 180.0L, deg2rad(1.0L));
-  BOOST_CHECK_EQUAL(180.0L / M_PIl, rad2deg(1.0L));
+  BOOST_CHECK_EQUAL(std::numbers::pi_v<long double>, PI<long double>);
+  BOOST_CHECK_EQUAL(std::numbers::pi_v<long double> / 180.0L, deg2rad(1.0L));
+  BOOST_CHECK_EQUAL(180.0L / std::numbers::pi_v<long double>, rad2deg(1.0L));
 }
 //////////////////////////////////////////////////////////////////////////////
 

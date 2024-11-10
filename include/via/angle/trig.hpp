@@ -31,38 +31,11 @@
 #include <ctime>
 #include <optional>
 #include <ostream>
+#include <numbers>
 #include <string>
 #include <type_traits>
 #ifndef PYBIND11_VERSION_MAJOR
 #include <gsl/assert>
-#endif
-
-#ifndef M_PI // M_PI is not part of the C or C++ standards: _USE_MATH_DEFINES
-constexpr double M_PI{3.14159265358979323846};
-constexpr double M_PI_2{1.57079632679489661923};
-#endif
-
-#ifndef M_PIl // M_PIl may be defined on Linux platforms as a GNU Extension.
-constexpr long double M_PIl{3.141592653589793238462643383279502884L};
-#endif
-
-#ifndef M_PI_3l // from Rust:
-                // https://doc.rust-lang.org/stable/std/f64/consts/constant.FRAC_PI_3.html
-constexpr long double M_PI_3l{1.04719755119659774615421446109316763L};
-#endif
-
-#ifndef M_SQRT1_2 // M_SQRT1_2 is not part of the C or C++ standards:
-                  // _USE_MATH_DEFINES
-constexpr double M_SQRT1_2{0.70710678118654752440};
-#endif
-
-#ifndef M_SQRT1_2l // M_SQRT1_2l may be defined on Linux platforms as a GNU
-                   // Extension.
-constexpr long double M_SQRT1_2l{0.707106781186547524400844362104849039L};
-#endif
-
-#ifndef M_SQRT3l // sqrt(3)
-constexpr long double M_SQRT3l{1.732050807568877293527446341505872367L};
 #endif
 
 namespace via {
@@ -78,23 +51,23 @@ namespace trig {
 /// PI to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T PI{
-    static_cast<T>(std::is_same<T, long double>::value ? M_PIl : M_PI)};
+constexpr T PI{ std::numbers::pi_v<T> };
 
 /// 2 * PI to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T TAU{2 * PI<T>};
+constexpr T TAU{2 * std::numbers::pi_v<T>};
 
 /// PI / 2 to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T PI_2{PI<T> / 2};
+constexpr T PI_2{std::numbers::pi_v<T> / 2};
 
 /// PI / 3 to double or long double precision of depending on T.
+/// from Rust: https://doc.rust-lang.org/stable/std/f64/consts/constant.FRAC_PI_3.html
 template <typename T>
   requires std::floating_point<T>
-constexpr T PI_3{static_cast<T>(M_PI_3l)};
+constexpr T PI_3{static_cast<T>(1.04719755119659774615421446109316763L)};
 
 /// PI / 4 to double or long double precision of depending on T.
 template <typename T>
@@ -109,18 +82,12 @@ constexpr T PI_6{PI_3<T> / 2};
 /// 1/√2 to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T SQRT1_2{static_cast<T>(
-    std::is_same<T, long double>::value ? M_SQRT1_2l : M_SQRT1_2)};
-
-/// √3 to double or long double precision of depending on T.
-template <typename T>
-  requires std::floating_point<T>
-constexpr T SQRT3{static_cast<T>(M_SQRT3l)};
+constexpr T SQRT1_2{ T(1) / std::numbers::sqrt2_v<T> };
 
 /// cos(30°) i.e. √3/2 to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T COS_30_DEGREES{static_cast<T>(M_SQRT3l / 2)};
+constexpr T COS_30_DEGREES{std::numbers::sqrt3_v<T> / 2};
 
 /// Convert a value in degrees to radians.
 template <typename T>

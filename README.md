@@ -5,16 +5,17 @@ A C++ library for performing accurate and efficient trigonometry calculations.
 ## Description
 
 The standard trigonometry functions: `sin`, `cos`, `tan`, etc.
-[give unexpected results for well-known angles](https://stackoverflow.com/questions/31502120/sin-and-cos-give-unexpected-results-for-well-known-angles#answer-31525208).
-This is because the functions use parameters with `radians` units instead of `degrees`.
-The conversion from `degrees` to `radians` suffers from
-[round-off error](https://en.wikipedia.org/wiki/Round-off_error) due to
-`radians` being based on the irrational number π.
+[give unexpected results for well-known angles](https://stackoverflow.com/questions/31502120/sin-and-cos-give-unexpected-results-for-well-known-angles#answer-31525208).  
+This is due to floating-point [round-off errors](https://en.wikipedia.org/wiki/Round-off_error)
+and the functions taking parameters in `radians` instead of `degrees`.
+The conversion from `degrees` to `radians` (and vice-versa) suffers from `round-off error`
+because `radians` is based on the irrational number π.
 
-This library provides a [sincos](include/via/trig.hpp#sincos) function to calculate more
-accurate values than the standard `sin` and `cos` functions for angles in radians
-and a [sincosd](include/via/trig.hpp#sincosd) function to calculate more accurate values
-for angles in degrees.
+This library uses the [remquo](https://en.cppreference.com/w/cpp/numeric/math/remquo)
+function to provide a [sincos](src/trig.rs#sincos) function to calculate more
+accurate values than the standard `sin` and `cos` functions for angles in `radians`
+and a [sincosd](src/trig.rs#sincosd) function to calculate more accurate values
+for angles in `degrees`.
 
 The library also provides an [Angle](#angle) class which represents an angle
 by its sine and cosine as the coordinates of a
@@ -51,7 +52,7 @@ namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
 constexpr auto PI_3{ trig::PI_3 <double> };
-constexpr auto SQRT3{ trig::SQRT3 <double> };
+constexpr auto COS_30_DEGREES{ COS_30_DEGREES <double> };
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(Test_angle)
@@ -59,7 +60,7 @@ BOOST_AUTO_TEST_SUITE(Test_angle)
 BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   const Angle angle_60(Degrees(60.0));
   BOOST_CHECK(angle_60.is_valid());
-  BOOST_CHECK_EQUAL(SQRT3/ 2, angle_60.sin().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_60.sin().v());
   BOOST_CHECK_EQUAL(0.5, angle_60.cos().v());
   BOOST_CHECK_EQUAL(Degrees(60.0), angle_60.to_degrees());
   // Fails because PI is irrational
@@ -89,7 +90,7 @@ namespace {
 constexpr auto EPSILON{std::numeric_limits<double>::epsilon()};
 constexpr auto CALCULATION_TOLERANCE{101 * EPSILON};
 constexpr auto PI_6{ trig::PI_6 <double> };
-constexpr auto SQRT3{ trig::SQRT3 <double> };
+constexpr auto COS_30_DEGREES{ COS_30_DEGREES <double> };
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(Test_angle_difference)
@@ -98,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_difference_conversion) {
   const Angle angle_d30(Degrees(-155.0), Degrees(175.0));
   BOOST_CHECK(angle_d30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_d30.sin().v());
-  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_d30.cos().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_d30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_d30.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_6), angle_d30.to_radians());
 }

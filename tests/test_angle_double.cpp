@@ -36,7 +36,7 @@ constexpr auto PI_3{trig::PI_3<double>};
 constexpr auto PI_4{trig::PI_4<double>};
 constexpr auto PI_6{trig::PI_6<double>};
 constexpr auto SQRT1_2{trig::SQRT1_2<double>};
-constexpr auto SQRT3{trig::SQRT3<double>};
+constexpr auto COS_30_DEGREES{trig::COS_30_DEGREES<double>};
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   const Angle angle_30{Radians(PI_3), Radians(PI_6)};
   BOOST_CHECK(angle_30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_30.sin().v());
-  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_30.cos().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_30.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_6), angle_30.to_radians());
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
 
   const Angle angle_60(Degrees(-140.0), Degrees(160.0));
   BOOST_CHECK(angle_60.is_valid());
-  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_60.sin().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_60.sin().v());
   BOOST_CHECK_EQUAL(0.5, angle_60.cos().v());
   BOOST_CHECK_EQUAL(Degrees(60.0), angle_60.to_degrees());
   // Fails because PI is irrational
@@ -188,20 +188,20 @@ BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   const Angle angle_d30(Degrees(-155.0), Degrees(175.0));
   BOOST_CHECK(angle_d30.is_valid());
   BOOST_CHECK_EQUAL(0.5, angle_d30.sin().v());
-  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_d30.cos().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_d30.cos().v());
   BOOST_CHECK_EQUAL(Degrees(30.0), angle_d30.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_6), angle_d30.to_radians());
 
   const Angle angle_120(Degrees(120.0));
   BOOST_CHECK(angle_120.is_valid());
-  BOOST_CHECK_EQUAL(SQRT3 / 2, angle_120.sin().v());
+  BOOST_CHECK_EQUAL(COS_30_DEGREES, angle_120.sin().v());
   BOOST_CHECK_EQUAL(-0.5, angle_120.cos().v());
   BOOST_CHECK_EQUAL(Degrees(120.0), angle_120.to_degrees());
   BOOST_CHECK_EQUAL(Radians(2 * PI_3), angle_120.to_radians());
 
   const Angle angle_m120(Degrees(-120.0));
   BOOST_CHECK(angle_m120.is_valid());
-  BOOST_CHECK_EQUAL(-SQRT3 / 2, angle_m120.sin().v());
+  BOOST_CHECK_EQUAL(-COS_30_DEGREES, angle_m120.sin().v());
   BOOST_CHECK_EQUAL(-0.5, angle_m120.cos().v());
   BOOST_CHECK_EQUAL(Degrees(-120.0), angle_m120.to_degrees());
   BOOST_CHECK_EQUAL(Radians(-2 * PI_3), angle_m120.to_radians());

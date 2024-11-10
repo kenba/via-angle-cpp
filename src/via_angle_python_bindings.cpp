@@ -45,7 +45,6 @@ PYBIND11_MODULE(via_angle, m) {
   m.attr("TAU") = via::trig::TAU<double>;
   m.attr("PI_3") = via::trig::PI_3<double>;
   m.attr("SQRT1_2") = via::trig::SQRT1_2<double>;
-  m.attr("SQRT3") = via::trig::SQRT3<double>;
   m.attr("COS_30_DEGREES") = via::trig::COS_30_DEGREES<double>;
 
   // Python bindings for degrees /radians conversion functions
