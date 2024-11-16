@@ -41,7 +41,7 @@ PYBIND11_MODULE(via_angle, m) {
   }
 
   // Python bindings for constants
-  m.attr("SQ_EPSILON") = via::SQ_EPSILON<double>;
+  m.attr("SQ_EPSILON") = via::trig::SQ_EPSILON<double>;
   m.attr("TAU") = via::trig::TAU<double>;
   m.attr("PI_3") = via::trig::PI_3<double>;
   m.attr("SQRT1_2") = via::trig::SQRT1_2<double>;
@@ -154,11 +154,12 @@ PYBIND11_MODULE(via_angle, m) {
       .def(py::init<>())
       .def(py::init<via::trig::UnitNegRange<double>,
                     via::trig::UnitNegRange<double>>())
-      .def(py::init<double, double>())
       .def(py::init<via::Degrees<double>>())
       .def(py::init<via::Degrees<double>, via::Degrees<double>>())
       .def(py::init<via::Radians<double>>())
       .def(py::init<via::Radians<double>, via::Radians<double>>())
+
+      .def("from_y_x", via::Angle<double>::from_y_x)
 
       .def("is_valid", &via::Angle<double>::is_valid)
 

@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_default_constructor) {
 
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
-  const Angle<double> one(1.0, 0.0);
+  const auto one{Angle<double>::from_y_x(1.0, 0.0)};
   BOOST_CHECK(one.is_valid());
   BOOST_CHECK(one);
   BOOST_CHECK_EQUAL(1.0, one.sin().v());
@@ -130,11 +130,11 @@ BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
   BOOST_CHECK_EQUAL(Degrees(90.0), one.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI_2), one.to_radians());
 
-  const Angle<double> m_one(0.0, -1.0);
+  const auto m_one{Angle<double>::from_y_x(0.0, -1.0)};
   BOOST_CHECK_EQUAL(Degrees(180.0), m_one.to_degrees());
   BOOST_CHECK_EQUAL(Radians(PI), m_one.to_radians());
 
-  const Angle angle_m45(-EPSILON, EPSILON);
+  const auto angle_m45{Angle<double>::from_y_x(-EPSILON, EPSILON)};
   BOOST_CHECK_CLOSE(-SQRT1_2, angle_m45.sin().v(), CALCULATION_TOLERANCE);
   BOOST_CHECK_CLOSE(SQRT1_2, angle_m45.cos().v(), CALCULATION_TOLERANCE);
 
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
 BOOST_AUTO_TEST_CASE(test_Angle_conversion) {
   const Angle<double> zero;
 
-  const Angle too_small(-EPSILON / 2, EPSILON / 2);
+  const auto too_small{Angle<double>::from_y_x(-EPSILON / 2, EPSILON / 2)};
   BOOST_CHECK(too_small.is_valid());
   BOOST_CHECK_EQUAL(zero, too_small);
 

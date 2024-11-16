@@ -90,7 +90,7 @@ if (CPP_UNIT_TESTS)
     endif()
 
     enable_testing()
-    add_test(NAME via_angle.test COMMAND  ${PROJECT_NAME}_test)
+    add_test(NAME via-angle_test COMMAND  ${PROJECT_NAME}_test)
     endif(Boost_FOUND)
 endif(CPP_UNIT_TESTS)
 

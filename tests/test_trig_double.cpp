@@ -84,9 +84,9 @@ BOOST_AUTO_TEST_CASE(test_trig_functions) {
   const auto sin_120{sin_60};
   const auto cos_120{cosine_from_sine(sin_120, -1.0)};
 
-  const auto recip_sq_epsilon{1.0 / via::SQ_EPSILON<double>};
+  const auto recip_sq_epsilon{1.0 / via::trig::SQ_EPSILON<double>};
 
-  const auto sin_msq_epsilon{UnitNegRange(-via::SQ_EPSILON<double>)};
+  const auto sin_msq_epsilon{UnitNegRange(-via::trig::SQ_EPSILON<double>)};
   BOOST_CHECK_EQUAL(-recip_sq_epsilon, csc(sin_msq_epsilon).value());
   BOOST_CHECK_EQUAL(-recip_sq_epsilon, sec(sin_msq_epsilon).value());
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_trig_functions) {
   BOOST_CHECK_EQUAL(1.0, sec(cos_msq_epsilon).value());
   BOOST_CHECK_EQUAL(1.0, csc(cos_msq_epsilon).value());
 
-  BOOST_CHECK_EQUAL(-via::SQ_EPSILON<double>,
+  BOOST_CHECK_EQUAL(-via::trig::SQ_EPSILON<double>,
                     tan(sin_msq_epsilon, cos_msq_epsilon).value());
   BOOST_CHECK_EQUAL(-recip_sq_epsilon,
                     cot(sin_msq_epsilon, cos_msq_epsilon).value());
@@ -137,6 +137,12 @@ BOOST_AUTO_TEST_CASE(test_radians_conversion) {
   BOOST_CHECK_CLOSE(0.5, cos_60.v(), 2 * CALCULATION_TOLERANCE);
   BOOST_CHECK_EQUAL(PI_3<double>, arctan2(sin_60, cos_60));
 
+  // -π radians round trip to +π radians
+  const auto [sin_180, cos_180]{sincos(-PI<double>)};
+  BOOST_CHECK_EQUAL(0.0, sin_180.v());
+  BOOST_CHECK_EQUAL(-1.0, cos_180.v());
+  BOOST_CHECK_EQUAL(PI<double>, arctan2(sin_180, cos_180));
+
   // π - π/4 radians round trip
   const auto [sin_135, cos_135]{sincos_diff(PI<double>, PI_4<double>)};
   BOOST_CHECK_EQUAL(SQRT1_2<double>, sin_135.v());
@@ -168,6 +174,12 @@ BOOST_AUTO_TEST_CASE(test_degrees_conversion) {
   BOOST_CHECK_EQUAL(COS_30_DEGREES<double>, sin_60.v());
   BOOST_CHECK_EQUAL(0.5, cos_60.v());
   BOOST_CHECK_EQUAL(60.0, arctan2d(sin_60, cos_60));
+
+  // -180 degrees round trip to +180 degrees
+  const auto [sin_180, cos_180]{sincosd<double>(-180)};
+  BOOST_CHECK_EQUAL(0.0, sin_180.v());
+  BOOST_CHECK_EQUAL(-1.0, cos_180.v());
+  BOOST_CHECK_EQUAL(180.0, arctan2d(sin_180, cos_180));
 
   // 180 - 45 degrees round trip
   const auto [sin_135, cos_135]{sincosd_diff<double>(180, 45)};

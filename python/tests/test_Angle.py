@@ -94,7 +94,7 @@ def test_Angle_default_constructor():
 def test_Angle_y_x_constructor():
     """Test y-x constructed values."""
 
-    one = Angle(1.0, 0.0)
+    one = Angle.from_y_x(1.0, 0.0)
     assert 1.0 == one.sin().v()
     assert 0.0 == one.cos().v()
     assert None == one.tan()
@@ -105,14 +105,14 @@ def test_Angle_y_x_constructor():
     assert Radians(np.pi / 2) == one.to_radians()
     assert repr(one) == 'Angle([ 1.000000, 0.000000 ])'
 
-    angle_m45 = Angle(-EPSILON, EPSILON)
+    angle_m45 = Angle.from_y_x(-EPSILON, EPSILON)
     assert_almost_equal(-SQRT1_2, angle_m45.sin().v())
     assert_almost_equal(SQRT1_2, angle_m45.cos().v())
 
 def test_Angle_conversion():
     zero = Angle()
 
-    too_small = Angle(-EPSILON / 2.0, EPSILON / 2.0)
+    too_small = Angle.from_y_x(-EPSILON / 2.0, EPSILON / 2.0)
     assert too_small.is_valid()
     assert zero == too_small
 

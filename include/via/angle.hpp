@@ -77,7 +77,7 @@ public:
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> Degrees<T> {
-    return Degrees(-v_);
+    return Degrees(T() - v_);
   }
 
   /// A Python representation of a Degrees type.
@@ -92,16 +92,16 @@ public:
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator==(const Degrees<T> &lhs,
-                          const Degrees<T> &rhs) noexcept -> bool {
+constexpr auto operator==(const Degrees<T> &lhs, const Degrees<T> &rhs) noexcept
+    -> bool {
   return lhs.v() == rhs.v();
 }
 
 /// Degrees ostream << operator
 template <typename T>
   requires std::floating_point<T>
-constexpr auto operator<<(std::ostream &os,
-                          const Degrees<T> &a) -> std::ostream & {
+constexpr auto operator<<(std::ostream &os, const Degrees<T> &a)
+    -> std::ostream & {
   return os << a.v();
 }
 
@@ -109,8 +109,8 @@ constexpr auto operator<<(std::ostream &os,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator+(const Degrees<T> &lhs,
-                         const Degrees<T> &rhs) noexcept -> Degrees<T> {
+constexpr auto operator+(const Degrees<T> &lhs, const Degrees<T> &rhs) noexcept
+    -> Degrees<T> {
   constexpr T T180{180};
   constexpr T T360{360};
   const auto [s, t]{two_sum(lhs.v(), rhs.v())};
@@ -166,15 +166,15 @@ public:
 
   /// Clamp value into the range: `0 <= v_ <= max_value`.
   [[nodiscard("Pure Function")]]
-  constexpr auto
-  clamp(const Radians<T> max_value) const noexcept -> Radians<T> {
+  constexpr auto clamp(const Radians<T> max_value) const noexcept
+      -> Radians<T> {
     return Radians(std::clamp<T>(v_, 0, max_value.v()));
   }
 
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> Radians<T> {
-    return Radians(-v_);
+    return Radians(T() - v_);
   }
 
   /// A Python representation of a Radians type.
@@ -189,16 +189,16 @@ public:
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator==(const Radians<T> &lhs,
-                          const Radians<T> &rhs) noexcept -> bool {
+constexpr auto operator==(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
+    -> bool {
   return lhs.v() == rhs.v();
 }
 
 /// Radians ostream << operator
 template <typename T>
   requires std::floating_point<T>
-constexpr auto operator<<(std::ostream &os,
-                          const Radians<T> &a) -> std::ostream & {
+constexpr auto operator<<(std::ostream &os, const Radians<T> &a)
+    -> std::ostream & {
   return os << a.v();
 }
 
@@ -206,8 +206,8 @@ constexpr auto operator<<(std::ostream &os,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator+(const Radians<T> &lhs,
-                         const Radians<T> &rhs) noexcept -> Radians<T> {
+constexpr auto operator+(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
+    -> Radians<T> {
   const auto [s, t]{two_sum(lhs.v(), rhs.v())};
   return Radians((s <= -trig::PI<T>) ? s + trig::TAU<T> + t
                  : (s > trig::PI<T>) ? s - trig::TAU<T> + t
@@ -218,8 +218,8 @@ constexpr auto operator+(const Radians<T> &lhs,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator-(const Radians<T> &lhs,
-                         const Radians<T> &rhs) noexcept -> Radians<T> {
+constexpr auto operator-(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
+    -> Radians<T> {
   return lhs + -rhs;
 }
 
@@ -260,22 +260,6 @@ public:
       const std::tuple<trig::UnitNegRange<T>, trig::UnitNegRange<T>> &t)
       : Angle(std::get<0>(t), std::get<1>(t)) {}
 
-  /// Construct an Angle from y and x values.
-  /// Normalizes the values.
-  /// @post is_valid() == true.
-  /// @param y the y coordinate.
-  /// @param x the x coordinate.
-  constexpr Angle(const T y, const T x) : Angle() {
-    const auto length{std::hypot(y, x)};
-    if (length > std::numeric_limits<T>::epsilon()) {
-      sin_ = trig::UnitNegRange<T>::clamp(y / length);
-      cos_ = trig::UnitNegRange<T>::clamp(x / length);
-    }
-#ifndef PYBIND11_VERSION_MAJOR
-    Ensures(is_valid());
-#endif
-  }
-
   /// Degrees Constructor
   constexpr explicit Angle(const Degrees<T> degrees)
       : Angle(trig::sincosd(degrees.v())) {}
@@ -291,6 +275,22 @@ public:
   /// Radians difference Constructor
   constexpr explicit Angle(const Radians<T> a, const Radians<T> b)
       : Angle(trig::sincos_diff(a.v(), b.v())) {}
+
+  /// Construct an Angle from y and x values.
+  /// Normalizes the values.
+  /// @post is_valid() == true.
+  /// @param y the y coordinate.
+  /// @param x the x coordinate.
+  static constexpr auto from_y_x(const T y, const T x) -> Angle<T> {
+    const T length{std::hypot(y, x)};
+
+    if (length < std::numeric_limits<T>::epsilon()) {
+      return Angle<T>();
+    } else {
+      return Angle(trig::UnitNegRange<T>::clamp(y / length),
+                   trig::UnitNegRange<T>::clamp(x / length));
+    }
+  }
 
   /// Function to determine whether the Angle is valid.
   [[nodiscard("Pure Function")]]
@@ -426,15 +426,15 @@ public:
 
   /// Addition operator.
   [[nodiscard("Pure Function")]]
-  constexpr friend auto operator+(const Angle<T> a,
-                                  const Angle<T> &b) noexcept -> Angle<T> {
+  constexpr friend auto operator+(const Angle<T> a, const Angle<T> &b) noexcept
+      -> Angle<T> {
     return Angle(sine_sum(a, b), cosine_sum(a, b));
   }
 
   /// Subtraction operator.
   [[nodiscard("Pure Function")]]
-  constexpr friend auto operator-(const Angle<T> a,
-                                  const Angle<T> &b) noexcept -> Angle<T> {
+  constexpr friend auto operator-(const Angle<T> a, const Angle<T> &b) noexcept
+      -> Angle<T> {
     return Angle(sine_diff(a, b), cosine_diff(a, b));
   }
 
@@ -460,16 +460,16 @@ public:
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto operator==(const Angle<T> &lhs,
-                          const Angle<T> &rhs) noexcept -> bool {
+constexpr auto operator==(const Angle<T> &lhs, const Angle<T> &rhs) noexcept
+    -> bool {
   return lhs.sin() == rhs.sin() && lhs.cos() == rhs.cos();
 }
 
 /// Angle ostream << operator
 template <typename T>
   requires std::floating_point<T>
-constexpr auto operator<<(std::ostream &os,
-                          const Angle<T> &a) -> std::ostream & {
+constexpr auto operator<<(std::ostream &os, const Angle<T> &a)
+    -> std::ostream & {
   return os << '(' << a.sin() << ',' << a.cos() << ')';
 }
 
@@ -479,8 +479,8 @@ constexpr auto operator<<(std::ostream &os,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto sine_sum(const Angle<T> a,
-                        const Angle<T> b) noexcept -> trig::UnitNegRange<T> {
+constexpr auto sine_sum(const Angle<T> a, const Angle<T> b) noexcept
+    -> trig::UnitNegRange<T> {
   return trig::sine_sum(a.sin(), a.cos(), b.sin(), b.cos());
 }
 
@@ -490,8 +490,8 @@ constexpr auto sine_sum(const Angle<T> a,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto sine_diff(const Angle<T> a,
-                         const Angle<T> b) noexcept -> trig::UnitNegRange<T> {
+constexpr auto sine_diff(const Angle<T> a, const Angle<T> b) noexcept
+    -> trig::UnitNegRange<T> {
   return trig::sine_diff(a.sin(), a.cos(), b.sin(), b.cos());
 }
 
@@ -501,8 +501,8 @@ constexpr auto sine_diff(const Angle<T> a,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto cosine_sum(const Angle<T> a,
-                          const Angle<T> b) noexcept -> trig::UnitNegRange<T> {
+constexpr auto cosine_sum(const Angle<T> a, const Angle<T> b) noexcept
+    -> trig::UnitNegRange<T> {
   return trig::cosine_sum(a.sin(), a.cos(), b.sin(), b.cos());
 }
 
@@ -512,8 +512,8 @@ constexpr auto cosine_sum(const Angle<T> a,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto cosine_diff(const Angle<T> a,
-                           const Angle<T> b) noexcept -> trig::UnitNegRange<T> {
+constexpr auto cosine_diff(const Angle<T> a, const Angle<T> b) noexcept
+    -> trig::UnitNegRange<T> {
   return trig::cosine_diff(a.sin(), a.cos(), b.sin(), b.cos());
 }
 } // namespace via

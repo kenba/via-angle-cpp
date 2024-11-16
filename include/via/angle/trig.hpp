@@ -29,16 +29,16 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <numbers>
 #include <optional>
 #include <ostream>
-#include <numbers>
 #include <string>
-#include <type_traits>
 #ifndef PYBIND11_VERSION_MAJOR
 #include <gsl/assert>
 #endif
 
 namespace via {
+namespace trig {
 /// ε * ε, a very small number.
 /// Where: ε, the difference between 1.0 and the next value representable by
 /// type T.
@@ -47,11 +47,10 @@ template <typename T>
 constexpr T SQ_EPSILON{std::numeric_limits<T>::epsilon() *
                        std::numeric_limits<T>::epsilon()};
 
-namespace trig {
 /// PI to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T PI{ std::numbers::pi_v<T> };
+constexpr T PI{std::numbers::pi_v<T>};
 
 /// 2 * PI to double or long double precision of depending on T.
 template <typename T>
@@ -64,7 +63,8 @@ template <typename T>
 constexpr T PI_2{std::numbers::pi_v<T> / 2};
 
 /// PI / 3 to double or long double precision of depending on T.
-/// from Rust: https://doc.rust-lang.org/stable/std/f64/consts/constant.FRAC_PI_3.html
+/// from Rust:
+/// https://doc.rust-lang.org/stable/std/f64/consts/constant.FRAC_PI_3.html
 template <typename T>
   requires std::floating_point<T>
 constexpr T PI_3{static_cast<T>(1.04719755119659774615421446109316763L)};
@@ -82,7 +82,7 @@ constexpr T PI_6{PI_3<T> / 2};
 /// 1/√2 to double or long double precision of depending on T.
 template <typename T>
   requires std::floating_point<T>
-constexpr T SQRT1_2{ T(1) / std::numbers::sqrt2_v<T> };
+constexpr T SQRT1_2{T(1) / std::numbers::sqrt2_v<T>};
 
 /// cos(30°) i.e. √3/2 to double or long double precision of depending on T.
 template <typename T>
@@ -97,7 +97,7 @@ constexpr auto deg2rad(const T value) noexcept -> T {
   if (std::abs(value) == static_cast<T>(30))
     return std::copysign(PI_6<T>, value);
 
-  return value * (PI<T> / 180);
+  return value * (PI<T> / T(180));
 }
 
 /// Convert a value in radians to degrees.
@@ -105,7 +105,7 @@ template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
 constexpr auto rad2deg(const T value) noexcept -> T {
-  return value * (180 / PI<T>);
+  return value * (T(180) / PI<T>);
 }
 
 /// The UnitNegRange type.
@@ -148,7 +148,7 @@ public:
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> UnitNegRange<T> {
-    return UnitNegRange(T(0) - v_);
+    return UnitNegRange(T() - v_);
   }
 
   /// The spaceship operator
@@ -178,8 +178,8 @@ constexpr auto operator==(const UnitNegRange<T> &lhs,
 /// UnitNegRange ostream << operator
 template <typename T>
   requires std::floating_point<T>
-constexpr auto operator<<(std::ostream &os,
-                          const UnitNegRange<T> &a) -> std::ostream & {
+constexpr auto operator<<(std::ostream &os, const UnitNegRange<T> &a)
+    -> std::ostream & {
   return os << a.v();
 }
 
@@ -192,9 +192,9 @@ constexpr auto operator<<(std::ostream &os,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto
-swap_sin_cos(const UnitNegRange<T> a) noexcept -> UnitNegRange<T> {
-  return UnitNegRange<T>::clamp(std::sqrt((1 - a.v()) * (1 + a.v())));
+constexpr auto swap_sin_cos(const UnitNegRange<T> a) noexcept
+    -> UnitNegRange<T> {
+  return UnitNegRange<T>::clamp(std::sqrt((T(1) - a.v()) * (T(1) + a.v())));
 };
 
 /// Convert a sine to a cosine, or vice versa:
@@ -208,8 +208,8 @@ swap_sin_cos(const UnitNegRange<T> a) noexcept -> UnitNegRange<T> {
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto cosine_from_sine(const UnitNegRange<T> a,
-                                T sign) noexcept -> UnitNegRange<T> {
+constexpr auto cosine_from_sine(const UnitNegRange<T> a, T sign) noexcept
+    -> UnitNegRange<T> {
   return UnitNegRange<T>(std::copysign(swap_sin_cos(a).v(), sign));
 }
 
@@ -231,8 +231,8 @@ constexpr auto sine(const T radians) noexcept {
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto cosine(const T radians,
-                      const UnitNegRange<T> sin) noexcept -> UnitNegRange<T> {
+constexpr auto cosine(const T radians, const UnitNegRange<T> sin) noexcept
+    -> UnitNegRange<T> {
   const auto radians_abs{std::abs(radians)};
   if (radians_abs == PI_4<T>)
     return UnitNegRange<T>(std::copysign(SQRT1_2<T>, PI_2<T> - radians_abs));
@@ -248,9 +248,10 @@ constexpr auto cosine(const T radians,
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-constexpr auto assign_sin_cos_to_quadrant(
-    const UnitNegRange<T> sin, const UnitNegRange<T> cos,
-    const int q) noexcept -> std::tuple<UnitNegRange<T>, UnitNegRange<T>> {
+constexpr auto assign_sin_cos_to_quadrant(const UnitNegRange<T> sin,
+                                          const UnitNegRange<T> cos,
+                                          const int q) noexcept
+    -> std::tuple<UnitNegRange<T>, UnitNegRange<T>> {
   switch (q & 3) {
   case 1:
     return {cos, -sin}; // quarter_turn_cw
@@ -329,7 +330,7 @@ constexpr auto arctan2(const UnitNegRange<T> sin,
   if (std::signbit(cos.v()))
     radians = PI<T> - radians;
 
-  // return radians in the range -π <=radians <= π
+  // return radians in the range -π < radians <= π
   return std::copysign(radians, sin.v());
 }
 
@@ -348,7 +349,7 @@ constexpr auto sincosd(const T degrees) noexcept
   int q;
   const auto degrees_q{std::remquo(degrees, static_cast<T>(90), &q)};
 
-  // radians_q is radians in range `-FRAC_PI_4..=FRAC_PI_4`
+  // radians_q is radians in range -π/4 <= radians <= π/4
   const auto radians_q = deg2rad(degrees_q);
   const auto sin{sine(radians_q)};
   return assign_sin_cos_to_quadrant(sin, cosine(radians_q, sin), q);
@@ -371,7 +372,7 @@ constexpr auto sincosd_diff(const T a, const T b) noexcept
   int q;
   const auto degrees_q{std::remquo(delta, static_cast<T>(90), &q) + t};
 
-  // radians_q is radians in range `-FRAC_PI_4..=FRAC_PI_4`
+  // radians_q is radians in range -π/4 <= radians <= π/4
   const auto radians_q = deg2rad(degrees_q);
   const auto sin{sine(radians_q)};
   return assign_sin_cos_to_quadrant(sin, cosine(radians_q, sin), q);
@@ -388,11 +389,11 @@ constexpr auto arctan2_degrees(const UnitNegRange<T> sin_abs,
                               : rad2deg(std::atan2(sin_abs.v(), cos_abs.v()));
 }
 
-/// Accurately calculate an angle in `Radians` from its sine and cosine.
+/// Accurately calculate an angle in `Degrees` from its sine and cosine.
 ///
 /// @param sin, cos the sine and cosine of the angle in `UnitNegRange`s.
 ///
-/// @return the angle in `Radians`.
+/// @return the angle in `Degrees`.
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
@@ -414,7 +415,7 @@ constexpr auto arctan2d(const UnitNegRange<T> sin,
   if (std::signbit(cos.v()))
     degrees = static_cast<T>(180) - degrees;
 
-  // return degrees in the range -180° <= degrees <= 180°
+  // return degrees in the range -180° < degrees <= 180°
   return std::copysign(degrees, sin.v());
 }
 
@@ -431,7 +432,7 @@ constexpr auto csc(const UnitNegRange<T> sin) noexcept -> std::optional<T> {
   if (sin.abs().v() >= SQ_EPSILON<T>)
     return 1.0 / sin.v();
 
-  return {};
+  return std::nullopt;
 }
 
 /// The secant of an angle.
@@ -461,7 +462,7 @@ constexpr auto tan(const UnitNegRange<T> sin,
   if (secant.has_value())
     return sin.v() * secant.value();
 
-  return {};
+  return std::nullopt;
 }
 
 /// The cotangent of an angle.
@@ -479,7 +480,7 @@ constexpr auto cot(const UnitNegRange<T> sin,
   if (cosecant.has_value())
     return cos.v() * cosecant.value();
 
-  return {};
+  return std::nullopt;
 }
 
 /// Calculate the sine of the difference of two angles.
@@ -494,8 +495,8 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto
 sine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
-          const UnitNegRange<T> sin_b,
-          const UnitNegRange<T> cos_b) noexcept -> UnitNegRange<T> {
+          const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
+    -> UnitNegRange<T> {
   return UnitNegRange<T>::clamp(sin_a.v() * cos_b.v() - sin_b.v() * cos_a.v());
 }
 
@@ -511,8 +512,8 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto
 cosine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
-            const UnitNegRange<T> sin_b,
-            const UnitNegRange<T> cos_b) noexcept -> UnitNegRange<T> {
+            const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
+    -> UnitNegRange<T> {
   return UnitNegRange<T>::clamp(cos_a.v() * cos_b.v() + sin_a.v() * sin_b.v());
 }
 
@@ -527,8 +528,8 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto
 sine_sum(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
-         const UnitNegRange<T> sin_b,
-         const UnitNegRange<T> cos_b) noexcept -> UnitNegRange<T> {
+         const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
+    -> UnitNegRange<T> {
   return sine_diff(sin_a, cos_a, -sin_b, cos_b);
 }
 
@@ -543,8 +544,8 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto
 cosine_sum(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
-           const UnitNegRange<T> sin_b,
-           const UnitNegRange<T> cos_b) noexcept -> UnitNegRange<T> {
+           const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
+    -> UnitNegRange<T> {
   return cosine_diff(sin_a, cos_a, -sin_b, cos_b);
 }
 
@@ -555,7 +556,7 @@ template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
 constexpr auto sq_sine_half(const UnitNegRange<T> cos_a) noexcept -> T {
-  return (1 - cos_a.v()) / 2;
+  return (T(1) - cos_a.v()) / 2;
 }
 
 /// Square of the cosine of half the Angle.
@@ -565,7 +566,7 @@ template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
 constexpr auto sq_cosine_half(const UnitNegRange<T> cos_a) noexcept -> T {
-  return (1 + cos_a.v()) / 2;
+  return (T(1) + cos_a.v()) / 2;
 }
 
 /// Calculates the length of the other side in a right angled
@@ -580,8 +581,8 @@ constexpr auto sq_cosine_half(const UnitNegRange<T> cos_a) noexcept -> T {
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
-auto calculate_adjacent_length(const T length,
-                               const T hypotenuse) noexcept -> T {
+auto calculate_adjacent_length(const T length, const T hypotenuse) noexcept
+    -> T {
 #ifndef PYBIND11_VERSION_MAJOR
   Expects((T() <= length) && (T() <= hypotenuse));
 #endif
