@@ -31,7 +31,7 @@ conversions to and from `degrees` or `radians`.
 
 * `Degrees`, `Radians` and `Angle` types;
 * functions for accurately calculating sines and cosines of angles in `Degrees` or `Radians`
-using [remquo](https://pubs.opengroup.org/onlinepubs/9699919799/functions/remquo.html);
+using [remquo](https://en.cppreference.com/w/cpp/numeric/math/remquo);
 * functions for accurately calculating sines and cosines of differences of angles in `Degrees` or `Radians`
 using the [2Sum](https://en.wikipedia.org/wiki/2Sum) algorithm;
 * functions for accurately calculating sums and differences of `Angles` using
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_SUITE_END()
 ```
 The following example calculates the sine and cosine between the difference
 of two angles in `degrees`: -155° - 175°.
-It is more accurate than calling the `Angle` `From` trait in the example above
+It is more accurate than calling the `Angle` constructor in the example above
 with the difference in `degrees`.
 It is particularly useful for implementing the
 [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula)
@@ -147,7 +147,7 @@ library, see *Figure 3*.
 ![Angle Dependencies](docs/images/angle_dependencies.svg)  
 *Figure 3 Angle Software Dependencies*
 
-Note: Python bindings do not require `GSL` or `boost`.
+Note: Python bindings do not require `boost`, just `GSL`.
 
 ### C++
 
@@ -167,6 +167,9 @@ In the `via-angle-cpp` directory, run:
 cmake -DINSTALL_PYTHON=OFF .
 sudo make install
 ```
+
+Note: it will be necessary to delete the `CMakeCache.txt` file created by
+running `cmake` above, before running `cmake` on this library again.
 
 #### Tests
 
@@ -188,7 +191,7 @@ The library uses [pybind11](https://github.com/pybind/pybind11) to provide C++ P
 and [scikit-build](https://pypi.org/project/scikit-build/) to build a python package using
 [cmake](https://cmake.org/).
 
-From the parent directory of `via-angle-cpp`:
+From the parent directory of `via-angle-cpp`, run:
 
 ```bash
 pip install ./via-angle-cpp

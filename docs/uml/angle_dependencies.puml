@@ -14,10 +14,14 @@ set namespaceSeparator ::
     }
     package python {
         component pybind11
+        component numpy
+        package test {
+            component pytest
+        }
+        pybind11 -- numpy
     }
     
     via_angle -- gsl
-    via_angle --  boost_test
     via_angle -- pybind11
 
 @enduml
