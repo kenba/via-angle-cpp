@@ -29,13 +29,11 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <gsl/assert>
 #include <numbers>
 #include <optional>
 #include <ostream>
 #include <string>
-#ifndef PYBIND11_VERSION_MAJOR
-#include <gsl/assert>
-#endif
 
 namespace via {
 namespace trig {
@@ -122,9 +120,7 @@ public:
 #endif
   /// Constructor
   constexpr explicit UnitNegRange(const T value) noexcept : v_{value} {
-#ifndef PYBIND11_VERSION_MAJOR
     Expects((-1 <= v_) && (v_ <= 1));
-#endif
   }
 
   /// Clamp value into the valid range: -1.0 to +1.0 inclusive
@@ -583,17 +579,16 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 auto calculate_adjacent_length(const T length, const T hypotenuse) noexcept
     -> T {
-#ifndef PYBIND11_VERSION_MAJOR
   Expects((T() <= length) && (T() <= hypotenuse));
-#endif
+
   const T result{(length <= T()) ? hypotenuse
                                  : ((length >= hypotenuse)
                                         ? T()
                                         : std::sqrt((hypotenuse - length) *
                                                     (hypotenuse + length)))};
-#ifndef PYBIND11_VERSION_MAJOR
+
   Ensures(result <= hypotenuse);
-#endif
+
   return result;
 }
 
@@ -609,17 +604,16 @@ template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
 auto spherical_adjacent_length(const T a, const T c) noexcept -> T {
-#ifndef PYBIND11_VERSION_MAJOR
   Expects((T() <= a) && (T() <= c));
-#endif
+
   const T result{(a <= T())
                      ? c
                      : ((a >= c) ? T()
                                  : std::acos(std::clamp<T>(
                                        std::cos(c) / std::cos(a), -1, 1)))};
-#ifndef PYBIND11_VERSION_MAJOR
+
   Ensures(result <= c);
-#endif
+
   return result;
 }
 
@@ -634,16 +628,14 @@ template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
 auto spherical_hypotenuse_length(const T a, const T b) noexcept -> T {
-#ifndef PYBIND11_VERSION_MAJOR
   Expects((T() <= a) && (T() <= b));
-#endif
+
   const T result{(a <= T())   ? ((b <= T()) ? T() : b)
                  : (b <= T()) ? a
                               : std::acos(std::clamp<T>(
                                     std::cos(a) * std::cos(b), -1, 1))};
-#ifndef PYBIND11_VERSION_MAJOR
+
   Ensures(result >= std::max(a, b));
-#endif
   return result;
 }
 

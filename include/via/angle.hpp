@@ -250,9 +250,7 @@ public:
   /// @param c the cosine of the angle.
   constexpr Angle(const trig::UnitNegRange<T> s, const trig::UnitNegRange<T> c)
       : sin_{s}, cos_{c} {
-#ifndef PYBIND11_VERSION_MAJOR
     Ensures(is_valid());
-#endif
   }
 
   /// Tuple Constructor

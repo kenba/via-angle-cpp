@@ -36,6 +36,12 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
+if (WIN32)
+  # Add the C++ Guidelines Support Library include files
+  set(CPP_GSL_DIR $ENV{CPP_GSL_DIR})
+  include_directories(${CPP_GSL_DIR}/include)
+endif()
+
 if (INSTALL_PYTHON)
   set(PYBIND11_FINDPYTHON ON)
   find_package(pybind11 CONFIG REQUIRED)
@@ -45,10 +51,6 @@ if (INSTALL_PYTHON)
   target_include_directories(via_angle PRIVATE
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>)
   install(TARGETS via_angle DESTINATION .)
-else()
-  # Add the C++ Guidelines Support Library include files
-  set(CPP_GSL_DIR $ENV{CPP_GSL_DIR})
-  include_directories(${CPP_GSL_DIR}/include)
 endif(INSTALL_PYTHON)
 
 if (CPP_UNIT_TESTS)
