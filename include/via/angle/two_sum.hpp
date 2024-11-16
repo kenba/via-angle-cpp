@@ -32,7 +32,7 @@
 /// C++](https://stackoverflow.com/a/38025837)
 template <typename T>
 #ifdef _MSC_VER
-void do_not_optimize(const T &value) {
+inline void do_not_optimize(const T &) {
 }
 #else
 __attribute__((always_inline)) inline void do_not_optimize(const T &value) {
@@ -48,6 +48,9 @@ namespace via {
 ///
 /// returns (a + b) and the floating-point error: $t = a + b - (a \oplus b)$
 /// so: $a+b=s+t$.
+#ifdef _MSC_VER
+#pragma optimize( "", off )
+#endif
 template <typename T>
   requires std::floating_point<T>
 [[nodiscard("Pure Function")]]
