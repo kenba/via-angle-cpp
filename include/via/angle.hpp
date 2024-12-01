@@ -21,6 +21,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
+/// @file
+/// @brief The via-angle-cpp library header file.
+//////////////////////////////////////////////////////////////////////////////
+/// @mainpage via-angle-cpp
+///
+/// This [file](../../include/via/angle.hpp) defines the
+/// `Degrees`, `Radians` and `Angle` classes and conversions between them.
+///
+/// [trig.hpp](../../include/via/angle/trig.hpp) contains trigonometry
+/// functions and the `UnitNegRange` class.
+///
+/// And [two_sum.hpp](../../include/via/angle/two_sum.hpp) contains the
+/// `two_sum` function.
+///
+//////////////////////////////////////////////////////////////////////////////
 #include "angle/trig.hpp"
 
 namespace via {
