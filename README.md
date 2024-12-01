@@ -1,5 +1,9 @@
 # via-angle-cpp
 
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/license/mit/)
+[![C/C++ CI](https://github.com/kenba/via-angle-cpp/workflows/C/C++%20CI/badge.svg)](https://github.com/kenba/via-angle-cpp/actions)
+[![codecov](https://codecov.io/gh/kenba/via-angle-cpp/graph/badge.svg?token=9UD3KB94EY)](https://codecov.io/gh/kenba/via-angle-cpp)
+
 A C++ library for performing accurate and efficient trigonometry calculations.
 
 ## Description
