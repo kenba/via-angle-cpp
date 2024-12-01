@@ -45,7 +45,7 @@ constexpr auto degrees_diff(const T x, const T y) noexcept -> std::tuple<T, T> {
 /// The Degrees type.
 template <typename T>
   requires std::floating_point<T>
-class Degrees {
+class Degrees final {
 #ifdef PYBIND11_NUMPY_DTYPE
 public:
 #endif
@@ -131,7 +131,7 @@ constexpr Degrees<T> operator-(const Degrees<T> &lhs,
 /// The Radians type.
 template <typename T>
   requires std::floating_point<T>
-class Radians {
+class Radians final {
 #ifdef PYBIND11_NUMPY_DTYPE
 public:
 #endif
@@ -227,7 +227,7 @@ constexpr auto operator-(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
 /// @invariant sin() * sin() + cos() * cos() = 1
 template <typename T>
   requires std::floating_point<T>
-class Angle {
+class Angle final {
 #ifdef PYBIND11_NUMPY_DTYPE
 public:
 #endif

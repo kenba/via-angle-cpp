@@ -110,7 +110,7 @@ constexpr auto rad2deg(const T value) noexcept -> T {
 /// @invariant -1 <= v <= 1
 template <typename T>
   requires std::floating_point<T>
-class UnitNegRange {
+class UnitNegRange final {
 #ifdef PYBIND11_NUMPY_DTYPE
 public:
 #endif
