@@ -16,13 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore build environment
-        id: build-env-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: /usr/include
-          key: ${{ runner.os }}-environment
-
       - name: install boost unzip and lcov
         run: |
           sudo apt-get update -qq
@@ -30,6 +23,13 @@ jobs:
 
       - name: create build environment
         run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Restore build environment
+        id: build-env-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: /usr/include
+          key: ${{ runner.os }}-environment
 
       - name: install Microsoft GSL
         working-directory: ${{github.workspace}}/build
