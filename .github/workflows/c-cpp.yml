@@ -15,6 +15,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Restore build environment
+            id: build-env-restore
+            uses: actions/cache/restore@v4
+            with:
+              path: /usr/include
+              key: ${{ runner.os }}-environment
+
       - name: install boost unzip and lcov
         run: |
           sudo apt-get update -qq
@@ -31,6 +39,13 @@ jobs:
           sudo cp -ar GSL-4.1.0/include/gsl /usr/include
           rm v4.1.0.zip
           rm -rf GSL-4.1.0
+
+      - name: Save build environment
+            id: cache-build-env
+            uses: actions/cache/save@v4
+            with:
+              path: /usr/include
+              key: ${{ steps.build-env-restore.outputs.cache-primary-key }}
 
       - name: configure cmake
         working-directory: ${{github.workspace}}/build
