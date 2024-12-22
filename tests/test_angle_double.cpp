@@ -24,6 +24,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "via/angle.hpp"
 #include <boost/test/unit_test.hpp>
+#include <sstream>
 
 using namespace via;
 
@@ -66,6 +67,10 @@ BOOST_AUTO_TEST_CASE(test_degrees) {
 
   BOOST_CHECK_EQUAL(-60.0, d_120.opposite().v());
   BOOST_CHECK_EQUAL(60.0, d_m120.opposite().v());
+
+  std::ostringstream os;
+  os << one;
+  BOOST_CHECK(std::string("1") == os.str());
 }
 //////////////////////////////////////////////////////////////////////////////
 
@@ -96,6 +101,10 @@ BOOST_AUTO_TEST_CASE(test_radians) {
   BOOST_CHECK_EQUAL(1.0, one.clamp(one).v());
   const auto one_epsilon{Radians(1.0 + EPSILON)};
   BOOST_CHECK_EQUAL(1.0, one_epsilon.clamp(one).v());
+
+  std::ostringstream os;
+  os << one;
+  BOOST_CHECK(std::string("1") == os.str());
 }
 //////////////////////////////////////////////////////////////////////////////
 
@@ -113,11 +122,21 @@ BOOST_AUTO_TEST_CASE(test_Angle_default_constructor) {
   BOOST_CHECK(!zero.cot());
   BOOST_CHECK_EQUAL(0.0, zero.to_degrees().v());
   BOOST_CHECK_EQUAL(0.0, zero.to_radians().v());
+
+  std::ostringstream os;
+  os << zero;
+  BOOST_CHECK(std::string("(0,1)") == os.str());
 }
 //////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_Angle_y_x_constructor) {
+  const Angle<double> zero;
+
+  const auto too_small{Angle<double>::from_y_x(-EPSILON / 2, EPSILON / 2)};
+  BOOST_CHECK(too_small.is_valid());
+  BOOST_CHECK_EQUAL(zero, too_small);
+
   const auto one{Angle<double>::from_y_x(1.0, 0.0)};
   BOOST_CHECK(one.is_valid());
   BOOST_CHECK(one);

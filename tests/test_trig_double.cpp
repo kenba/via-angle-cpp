@@ -24,6 +24,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "via/angle/trig.hpp"
 #include <boost/test/unit_test.hpp>
+#include <sstream>
 
 using namespace via::trig;
 
@@ -64,6 +65,10 @@ BOOST_AUTO_TEST_CASE(test_UnitNegRange_traits) {
   BOOST_CHECK(one >= minus_one);
 
   BOOST_CHECK_EQUAL(one, minus_one.abs());
+
+  std::ostringstream os;
+  os << one;
+  BOOST_CHECK(std::string("1") == os.str());
 }
 //////////////////////////////////////////////////////////////////////////////
 
