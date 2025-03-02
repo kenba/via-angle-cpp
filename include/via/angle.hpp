@@ -1,7 +1,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -39,24 +39,6 @@
 #include "angle/trig.hpp"
 
 namespace via {
-/// The difference of two angles in degrees, reduced to +/-180 degrees.
-/// This is a refactor of GeographicLib::AngDiff.
-/// @param x, y the angles in degrees
-/// @return the difference and error of the angles.
-template <typename T>
-  requires std::floating_point<T>
-[[nodiscard("Pure Function")]]
-constexpr auto degrees_diff(const T x, const T y) noexcept -> std::tuple<T, T> {
-  auto [a, b] = two_sum(std::remainder(-x, T(360)), std::remainder(y, T(360)));
-  auto [d, e] = two_sum(std::remainder(a, T(360)), b);
-
-  // Fix the sign if d = -180, 0, 180.
-  if (d == 0 || std::abs(d) == T(360))
-    d = std::copysign(d, (e == 0) ? y - x : -e);
-
-  return (d, e);
-}
-
 /// The Degrees type.
 template <typename T>
   requires std::floating_point<T>
@@ -70,6 +52,9 @@ public:
 #endif
   /// Constructor
   constexpr explicit Degrees(const T value) noexcept : v_{value} {}
+
+  /// Default constructor
+  constexpr Degrees() noexcept = default;
 
   /// The accessor for v.
   [[nodiscard("Pure Function")]]
@@ -86,13 +71,40 @@ public:
   /// The opposite angle on the circle, i.e. +/- 180 degrees.
   [[nodiscard("Pure Function")]]
   constexpr auto opposite() const noexcept -> Degrees<T> {
-    return Degrees((0 < v_) ? v_ - 180 : v_ + 180);
+    return Degrees((0 < v_) ? v_ - T(180) : v_ + T(180));
+  }
+
+  /// The + operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator+(const Degrees<T> &rhs) const noexcept -> Degrees<T> {
+    constexpr T T180{180};
+    constexpr T T360{360};
+    const auto [s, t]{two_sum(v_, rhs.v_)};
+    return Degrees((s <= -T180) ? s + T360 + t : (s > T180) ? s - T360 + t : s);
+  }
+
+  /// The += operator
+  constexpr auto operator+=(const Degrees<T> &rhs) noexcept -> Degrees<T> & {
+    *this = *this + rhs;
+    return *this;
   }
 
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> Degrees<T> {
     return Degrees(T() - v_);
+  }
+
+  /// The - operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator-(const Degrees<T> &rhs) const noexcept -> Degrees<T> {
+    return *this + -rhs;
+  }
+
+  /// The -= operator
+  constexpr auto operator-=(const Degrees<T> &rhs) noexcept -> Degrees<T> & {
+    *this = *this - rhs;
+    return *this;
   }
 
   /// A Python representation of a Degrees type.
@@ -120,29 +132,6 @@ constexpr auto operator<<(std::ostream &os, const Degrees<T> &a)
   return os << a.v();
 }
 
-/// Degrees addition operator
-template <typename T>
-  requires std::floating_point<T>
-[[nodiscard("Pure Function")]]
-constexpr auto operator+(const Degrees<T> &lhs, const Degrees<T> &rhs) noexcept
-    -> Degrees<T> {
-  constexpr T T180{180};
-  constexpr T T360{360};
-  const auto [s, t]{two_sum(lhs.v(), rhs.v())};
-  return Degrees((s <= static_cast<T>(-T180)) ? s + T360 + t
-                 : (s > T180)                 ? s - T360 + t
-                                              : s);
-}
-
-/// Degrees subtraction operator
-template <typename T>
-  requires std::floating_point<T>
-[[nodiscard("Pure Function")]]
-constexpr Degrees<T> operator-(const Degrees<T> &lhs,
-                               const Degrees<T> &rhs) noexcept {
-  return lhs + -rhs;
-}
-
 /// The Radians type.
 template <typename T>
   requires std::floating_point<T>
@@ -156,6 +145,9 @@ public:
 #endif
   /// Constructor
   constexpr explicit Radians(const T value) noexcept : v_{value} {}
+
+  /// Default constructor
+  constexpr Radians() noexcept = default;
 
   /// Degrees Constructor
   constexpr explicit Radians(const Degrees<T> value) noexcept
@@ -186,10 +178,37 @@ public:
     return Radians(std::clamp<T>(v_, 0, max_value.v()));
   }
 
+  /// The + operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator+(const Radians<T> &rhs) const noexcept -> Radians<T> {
+    const auto [s, t]{two_sum(v_, rhs.v_)};
+    return Radians((s <= -trig::PI<T>) ? s + trig::TAU<T> + t
+                   : (s > trig::PI<T>) ? s - trig::TAU<T> + t
+                                       : s);
+  }
+
+  /// The += operator
+  constexpr auto operator+=(const Radians<T> &rhs) noexcept -> Radians<T> & {
+    *this = *this + rhs;
+    return *this;
+  }
+
   /// The unary minus operator
   [[nodiscard("Pure Function")]]
   constexpr auto operator-() const noexcept -> Radians<T> {
     return Radians(T() - v_);
+  }
+
+  /// The - operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator-(const Radians<T> &rhs) const noexcept -> Radians<T> {
+    return *this + -rhs;
+  }
+
+  /// The -= operator
+  constexpr auto operator-=(const Radians<T> &rhs) noexcept -> Radians<T> & {
+    *this = *this - rhs;
+    return *this;
   }
 
   /// A Python representation of a Radians type.
@@ -215,27 +234,6 @@ template <typename T>
 constexpr auto operator<<(std::ostream &os, const Radians<T> &a)
     -> std::ostream & {
   return os << a.v();
-}
-
-/// Radians addition operator
-template <typename T>
-  requires std::floating_point<T>
-[[nodiscard("Pure Function")]]
-constexpr auto operator+(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
-    -> Radians<T> {
-  const auto [s, t]{two_sum(lhs.v(), rhs.v())};
-  return Radians((s <= -trig::PI<T>) ? s + trig::TAU<T> + t
-                 : (s > trig::PI<T>) ? s - trig::TAU<T> + t
-                                     : s);
-}
-
-/// Radians subtraction operator
-template <typename T>
-  requires std::floating_point<T>
-[[nodiscard("Pure Function")]]
-constexpr auto operator-(const Radians<T> &lhs, const Radians<T> &rhs) noexcept
-    -> Radians<T> {
-  return lhs + -rhs;
 }
 
 /// The Angle represents an angle by it's sine and cosine components.
@@ -386,6 +384,37 @@ public:
     return Angle(-sin_, -cos_);
   }
 
+  /// The + operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator+(const Angle<T> &rhs) const noexcept -> Angle<T> {
+    return Angle(sine_sum(*this, rhs), cosine_sum(*this, rhs));
+  }
+
+  /// The += operator
+  constexpr auto operator+=(const Angle<T> &rhs) noexcept -> Angle<T> & {
+    *this = *this + rhs;
+    return *this;
+  }
+
+  /// Unary minus operator.
+  /// @return the negative angle, i.e. just swap the sine's sign.
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator-() const noexcept -> Angle<T> {
+    return Angle(-sin_, cos_);
+  }
+
+  /// The - operator
+  [[nodiscard("Pure Function")]]
+  constexpr auto operator-(const Angle<T> &rhs) const noexcept -> Angle<T> {
+    return Angle(sine_diff(*this, rhs), cosine_diff(*this, rhs));
+  }
+
+  /// The -= operator
+  constexpr auto operator-=(const Angle<T> &rhs) noexcept -> Angle<T> & {
+    *this = *this - rhs;
+    return *this;
+  }
+
   /// A quarter turn clockwise around the circle, i.e. + 90 degrees.
   /// @return the angle rotated 90 degrees clockwise.
   [[nodiscard("Pure Function")]]
@@ -428,27 +457,6 @@ public:
         trig::UnitNegRange<T>::clamp(
             std::copysign(std::sqrt(trig::sq_sine_half(cos_)), sin_.v())),
         trig::UnitNegRange<T>::clamp(std::sqrt(trig::sq_cosine_half(cos_))));
-  }
-
-  /// Unary minus operator.
-  /// @return the negative angle, i.e. just swap the sine's sign.
-  [[nodiscard("Pure Function")]]
-  constexpr auto operator-() const noexcept -> Angle<T> {
-    return Angle(-sin_, cos_);
-  }
-
-  /// Addition operator.
-  [[nodiscard("Pure Function")]]
-  constexpr friend auto operator+(const Angle<T> a, const Angle<T> &b) noexcept
-      -> Angle<T> {
-    return Angle(sine_sum(a, b), cosine_sum(a, b));
-  }
-
-  /// Subtraction operator.
-  [[nodiscard("Pure Function")]]
-  constexpr friend auto operator-(const Angle<T> a, const Angle<T> &b) noexcept
-      -> Angle<T> {
-    return Angle(sine_diff(a, b), cosine_diff(a, b));
   }
 
   /// The spaceship operator

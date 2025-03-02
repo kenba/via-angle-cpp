@@ -32,6 +32,8 @@ EPSILON = np.finfo(float).eps
 PI_6 = PI_3 / 2.0
 
 def test_degrees():
+    zero = Degrees()
+    assert 0.0 == zero.v()
     one = Degrees(1.0)
     two = Degrees(2.0)
     m_two = -two
@@ -42,6 +44,13 @@ def test_degrees():
     m_one = one + m_two
     assert -1.0 == m_one.v()
     assert one == abs(m_one)
+
+    result = Degrees(1.0)
+    result -= two
+    assert m_one == result
+
+    result += two
+    assert one == result
 
     d_120 = Degrees(120.0)
     d_m120 = -d_120
@@ -57,6 +66,8 @@ def test_degrees():
     assert Degrees(60.0) == d_m120.opposite()
 
 def test_radians():
+    zero = Radians()
+    assert 0.0 == zero.v()
     one = Radians(1.0)
     two = Radians(2.0)
     m_two = -two
@@ -67,6 +78,13 @@ def test_radians():
     m_one = one + m_two
     assert -1.0 == m_one.v()
     assert one == abs(m_one)
+
+    result = Radians(1.0)
+    result -= two
+    assert m_one == result
+
+    result += two
+    assert one == result
 
     result_1 = m_two - two
     assert TAU - 4.0 == result_1.v()

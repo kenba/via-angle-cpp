@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -45,6 +45,8 @@ BOOST_AUTO_TEST_SUITE(Test_angle)
 
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_degrees) {
+  const auto zero{Degrees<double>()};
+  BOOST_CHECK_EQUAL(0.0, zero.v());
   const auto one{Degrees(1.0)};
   const auto two{Degrees(2.0)};
   const auto m_two{-two};
@@ -54,6 +56,12 @@ BOOST_AUTO_TEST_CASE(test_degrees) {
 
   const auto m_one{one + m_two};
   BOOST_CHECK_EQUAL(-1.0, m_one.v());
+
+  auto result{one};
+  result -= two;
+  BOOST_CHECK_EQUAL(m_one, result);
+  result += two;
+  BOOST_CHECK_EQUAL(one, result);
 
   const auto d_120{Degrees(120.0)};
   const auto d_m120{Degrees(-120.0)};
@@ -76,6 +84,8 @@ BOOST_AUTO_TEST_CASE(test_degrees) {
 
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_radians) {
+  const auto zero{Radians<double>()};
+  BOOST_CHECK_EQUAL(0.0, zero.v());
   const auto one{Radians(1.0)};
   const auto two{Radians(2.0)};
   const auto m_two{-two};
@@ -85,6 +95,12 @@ BOOST_AUTO_TEST_CASE(test_radians) {
 
   const auto m_one{one + m_two};
   BOOST_CHECK_EQUAL(-1.0, m_one.v());
+
+  auto result{one};
+  result -= two;
+  BOOST_CHECK_EQUAL(m_one, result);
+  result += two;
+  BOOST_CHECK_EQUAL(one, result);
 
   const auto result_1 = m_two - two;
   BOOST_CHECK_EQUAL(trig::TAU<double> - 4.0, result_1.v());
@@ -96,7 +112,6 @@ BOOST_AUTO_TEST_CASE(test_radians) {
 
   const auto small_negative{Radians(-EPSILON)};
   BOOST_CHECK_EQUAL(0.0, small_negative.clamp(one).v());
-  const auto zero{Radians(0.0)};
   BOOST_CHECK_EQUAL(0.0, zero.clamp(one).v());
   BOOST_CHECK_EQUAL(1.0, one.clamp(one).v());
   const auto one_epsilon{Radians(1.0 + EPSILON)};
@@ -248,6 +263,12 @@ BOOST_AUTO_TEST_CASE(test_angle_maths) {
   const Angle degrees_60(Degrees(60.0));
   const Angle degrees_120(Degrees(120.0));
   const Angle degrees_m120(Degrees(-120.0));
+
+  auto result{degrees_60};
+  result -= degrees_120;
+  BOOST_CHECK_EQUAL(Degrees(-60.0), result.to_degrees());
+  result += degrees_120;
+  BOOST_CHECK_EQUAL(Degrees(60.0), result.to_degrees());
 
   BOOST_CHECK(degrees_120 < degrees_m120);
   BOOST_CHECK_EQUAL(degrees_120, degrees_m120.abs());

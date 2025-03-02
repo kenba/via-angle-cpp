@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -116,6 +116,7 @@ PYBIND11_MODULE(via_angle, m) {
 
   // Python bindings for the Degrees class
   py::class_<via::Degrees<double>>(m, "Degrees")
+      .def(py::init<>())
       .def(py::init<double>())
 
       .def("v", &via::Degrees<double>::v)
@@ -123,9 +124,12 @@ PYBIND11_MODULE(via_angle, m) {
       .def("__abs__", &via::Degrees<double>::abs)
       .def("__repr__", &via::Degrees<double>::python_repr)
 
-      .def(-py::self)
       .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(-py::self)
       .def(py::self - py::self)
+      .def(py::self -= py::self)
+
       .def(py::self == py::self);
 
   // Python numpy binding for the Radians class
@@ -133,6 +137,7 @@ PYBIND11_MODULE(via_angle, m) {
 
   // Python bindings for the Radians class
   py::class_<via::Radians<double>>(m, "Radians")
+      .def(py::init<>())
       .def(py::init<double>())
 
       .def("v", &via::Radians<double>::v)
@@ -141,9 +146,12 @@ PYBIND11_MODULE(via_angle, m) {
       .def("__abs__", &via::Radians<double>::abs)
       .def("__repr__", &via::Radians<double>::python_repr)
 
-      .def(-py::self)
       .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(-py::self)
       .def(py::self - py::self)
+      .def(py::self -= py::self)
+
       .def(py::self == py::self);
 
   // Python numpy binding for the Angle class
@@ -182,9 +190,12 @@ PYBIND11_MODULE(via_angle, m) {
       .def("__abs__", &via::Angle<double>::abs)
       .def("__repr__", &via::Angle<double>::python_repr)
 
-      .def(-py::self)
       .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(-py::self)
       .def(py::self - py::self)
+      .def(py::self -= py::self)
+
       .def(py::self == py::self);
 
   m.def("sine_sum", &via::sine_sum<double>,
