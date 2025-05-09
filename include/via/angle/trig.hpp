@@ -1,7 +1,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -206,7 +206,8 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto cosine_from_sine(const UnitNegRange<T> a, T sign) noexcept
     -> UnitNegRange<T> {
-  return UnitNegRange<T>(std::copysign(swap_sin_cos(a).v(), sign));
+  const auto b{swap_sin_cos(a)};
+  return (b.v() > T()) ? UnitNegRange<T>(std::copysign(b.v(), sign)) : b;
 }
 
 /// Calculate the sine of an angle in `radians`.

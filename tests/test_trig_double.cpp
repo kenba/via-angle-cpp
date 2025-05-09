@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024 Ken Barker
+// Copyright (c) 2024-2025 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -88,6 +88,10 @@ BOOST_AUTO_TEST_CASE(test_trig_functions) {
 
   const auto sin_120{sin_60};
   const auto cos_120{cosine_from_sine(sin_120, -1.0)};
+
+  const auto zero{cosine_from_sine(UnitNegRange(1.0), -1.0)};
+  BOOST_CHECK_EQUAL(0.0, zero.v());
+  BOOST_CHECK(!std::signbit(zero.v()));
 
   const auto recip_sq_epsilon{1.0 / via::trig::SQ_EPSILON<double>};
 
