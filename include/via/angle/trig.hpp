@@ -28,7 +28,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
-#include <ctime>
 #include <gsl/assert>
 #include <numbers>
 #include <optional>
