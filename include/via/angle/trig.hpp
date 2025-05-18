@@ -178,6 +178,18 @@ constexpr auto operator<<(std::ostream &os, const UnitNegRange<T> &a)
   return os << a.v();
 }
 
+/// Calculate 1 - a * a:
+/// Note: calculates (1 - a) * (1 + a) to minimize round-off error.
+/// @param a the value.
+/// @return (1 - a) * (1 + a)
+template <typename T>
+  requires std::floating_point<T>
+[[nodiscard("Pure Function")]]
+constexpr auto one_minus_sq_value(const UnitNegRange<T> a) noexcept
+    -> UnitNegRange<T> {
+  return UnitNegRange<T>::clamp((T(1) - a.v()) * (T(1) + a.v()));
+};
+
 /// Convert a cosine to a sine, or vice versa:
 /// return std::sqrt(1 - a) * (1 + a))
 /// @pre -1 <= a <= 1
@@ -189,7 +201,7 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto swap_sin_cos(const UnitNegRange<T> a) noexcept
     -> UnitNegRange<T> {
-  return UnitNegRange<T>::clamp(std::sqrt((T(1) - a.v()) * (T(1) + a.v())));
+  return UnitNegRange<T>(std::sqrt(one_minus_sq_value(a).v()));
 };
 
 /// Convert a sine to a cosine, or vice versa:
