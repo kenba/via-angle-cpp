@@ -187,7 +187,7 @@ template <typename T>
 [[nodiscard("Pure Function")]]
 constexpr auto one_minus_sq_value(const UnitNegRange<T> a) noexcept
     -> UnitNegRange<T> {
-  return UnitNegRange<T>::clamp((T(1) - a.v()) * (T(1) + a.v()));
+  return UnitNegRange<T>((T(1) - a.v()) * (T(1) + a.v()));
 };
 
 /// Convert a cosine to a sine, or vice versa:
