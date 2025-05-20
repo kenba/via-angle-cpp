@@ -58,6 +58,7 @@ PYBIND11_MODULE(via_angle, m) {
 
   // Python bindings for the UnitNegRange class
   py::class_<via::trig::UnitNegRange<double>>(m, "UnitNegRange")
+      .def(py::init<>())
       .def(py::init<double>())
 
       .def("v", &via::trig::UnitNegRange<double>::v)
