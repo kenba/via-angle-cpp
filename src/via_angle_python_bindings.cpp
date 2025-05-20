@@ -69,6 +69,10 @@ PYBIND11_MODULE(via_angle, m) {
       .def(py::self == py::self);
 
   // Python bindings for the trig functions
+  m.def("sq_a_minus_sq_b", &via::trig::sq_a_minus_sq_b<double>,
+        "Calculate a * a - b * b.");
+  m.def("one_minus_sq_value", &via::trig::one_minus_sq_value<double>,
+        "Calculate 1 - a * a.");
   m.def("swap_sin_cos", &via::trig::swap_sin_cos<double>,
         "Convert a cosine to a sine, or vice versa.");
   m.def("cosine_from_sine", &via::trig::cosine_from_sine<double>,

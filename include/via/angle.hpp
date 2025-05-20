@@ -445,8 +445,7 @@ public:
   [[nodiscard("Pure Function")]]
   constexpr auto x2() const noexcept -> Angle<T> {
     return Angle(trig::UnitNegRange<T>::clamp(2 * sin_.v() * cos_.v()),
-                 trig::UnitNegRange<T>::clamp((cos_.v() - sin_.v()) *
-                                              (cos_.v() + sin_.v())));
+                 trig::sq_a_minus_sq_b(cos_, sin_));
   }
 
   /// Calculate half the angle.
