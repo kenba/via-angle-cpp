@@ -53,6 +53,8 @@ BOOST_AUTO_TEST_CASE(test_pi_functions) {
 
 //////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(test_UnitNegRange_traits) {
+  const auto zero{UnitNegRange<double>()};
+  BOOST_CHECK_EQUAL(0.0, zero.v());
   const auto one{UnitNegRange<double>(1)};
   const auto minus_one{UnitNegRange<double>(-1)};
 

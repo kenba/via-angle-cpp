@@ -122,6 +122,9 @@ public:
     Expects((-1 <= v_) && (v_ <= 1));
   }
 
+  /// Default constructor
+  constexpr UnitNegRange() noexcept = default;
+
   /// Clamp value into the valid range: -1.0 to +1.0 inclusive
   [[nodiscard("Pure Function")]]
   static constexpr UnitNegRange<T> clamp(const T value) noexcept {
