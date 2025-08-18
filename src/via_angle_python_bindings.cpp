@@ -125,6 +125,7 @@ PYBIND11_MODULE(via_angle, m) {
       .def(py::init<double>())
 
       .def("v", &via::Degrees<double>::v)
+      .def("half", &via::Degrees<double>::half)
       .def("opposite", &via::Degrees<double>::opposite)
       .def("__abs__", &via::Degrees<double>::abs)
       .def("__repr__", &via::Degrees<double>::python_repr)
@@ -146,7 +147,8 @@ PYBIND11_MODULE(via_angle, m) {
       .def(py::init<double>())
 
       .def("v", &via::Radians<double>::v)
-      .def("clamp", &via::Radians<double>::opposite)
+      .def("clamp", &via::Radians<double>::clamp)
+      .def("half", &via::Radians<double>::half)
       .def("opposite", &via::Radians<double>::opposite)
       .def("__abs__", &via::Radians<double>::abs)
       .def("__repr__", &via::Radians<double>::python_repr)

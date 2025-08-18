@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2024 Ken Barker
+# Copyright (c) 2024-2025 Ken Barker
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +44,7 @@ def test_degrees():
     m_one = one + m_two
     assert -1.0 == m_one.v()
     assert one == abs(m_one)
+    assert one == two.half()
 
     result = Degrees(1.0)
     result -= two
@@ -78,6 +79,7 @@ def test_radians():
     m_one = one + m_two
     assert -1.0 == m_one.v()
     assert one == abs(m_one)
+    assert one == two.half()
 
     result = Radians(1.0)
     result -= two
@@ -93,6 +95,9 @@ def test_radians():
     result_2 = two - m_two
     assert 4.0 - TAU == result_2.v()
     assert 4.0 - np.pi == result_2.opposite().v()
+
+    assert one == two.clamp(one)
+    assert zero == m_two.clamp(one)
 
 def test_Angle_default_constructor():
     """Test default constructed values."""

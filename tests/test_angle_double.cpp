@@ -53,6 +53,7 @@ BOOST_AUTO_TEST_CASE(test_degrees) {
 
   BOOST_CHECK_EQUAL(-2.0, m_two.v());
   BOOST_CHECK_EQUAL(two, m_two.abs());
+  BOOST_CHECK_EQUAL(one, two.half());
 
   const auto m_one{one + m_two};
   BOOST_CHECK_EQUAL(-1.0, m_one.v());
@@ -92,6 +93,7 @@ BOOST_AUTO_TEST_CASE(test_radians) {
 
   BOOST_CHECK_EQUAL(-2.0, m_two.v());
   BOOST_CHECK_EQUAL(two, m_two.abs());
+  BOOST_CHECK_EQUAL(one, two.half());
 
   const auto m_one{one + m_two};
   BOOST_CHECK_EQUAL(-1.0, m_one.v());

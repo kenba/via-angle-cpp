@@ -68,6 +68,12 @@ public:
     return Degrees(std::abs(v_));
   }
 
+  /// Half of the `Degrees` value
+  [[nodiscard("Pure Function")]]
+  constexpr auto half() const noexcept -> Degrees<T> {
+    return Degrees(v_ / 2);
+  }
+
   /// The opposite angle on the circle, i.e. +/- 180 degrees.
   [[nodiscard("Pure Function")]]
   constexpr auto opposite() const noexcept -> Degrees<T> {
@@ -163,6 +169,12 @@ public:
   [[nodiscard("Pure Function")]]
   constexpr auto abs() const noexcept -> Radians<T> {
     return Radians(std::abs(v_));
+  }
+
+  /// Half of the `Radians` value
+  [[nodiscard("Pure Function")]]
+  constexpr auto half() const noexcept -> Radians<T> {
+    return Radians(v_ / 2);
   }
 
   /// The opposite angle on the circle, i.e. +/- PI radians.
