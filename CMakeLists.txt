@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Ken Barker
+# Copyright (c) 2024-2026 Ken Barker
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,11 @@ if (INSTALL_PYTHON)
 
   pybind11_add_module(via_angle src/via_angle_python_bindings.cpp)
   target_compile_features(via_angle PRIVATE cxx_std_23)
+  if (MSVC)
+    target_compile_options(via_angle PRIVATE /arch:SSE4.2)
+  else()
+    target_compile_options(via_angle PRIVATE -msse4.2 -mfma)
+  endif()
   target_include_directories(via_angle PRIVATE
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>)
   install(TARGETS via_angle DESTINATION .)
@@ -81,9 +86,9 @@ if (CPP_UNIT_TESTS)
                             Boost::unit_test_framework)
 
     if (MSVC)
-        target_compile_options(${PROJECT_NAME}_test PRIVATE /W4)
+        target_compile_options(${PROJECT_NAME}_test PRIVATE /W4 /arch:SSE4.2)
     else()
-        target_compile_options(${PROJECT_NAME}_test PRIVATE -Wall -Wextra -Wpedantic)
+        target_compile_options(${PROJECT_NAME}_test PRIVATE -Wall -Wextra -Wpedantic -msse4.2 -mfma)
 
         if (CODE_COVERAGE)
             target_compile_options(${PROJECT_NAME}_test PRIVATE --coverage)

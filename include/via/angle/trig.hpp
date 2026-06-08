@@ -24,6 +24,7 @@
 /// @file trig.hpp
 /// @brief Contains the via::trig namespace.
 //////////////////////////////////////////////////////////////////////////////
+#include "simd.hpp"
 #include "two_sum.hpp"
 #include "vector2.hpp"
 #include <algorithm>
@@ -526,6 +527,24 @@ sine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
       vector2::perp_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
 }
 
+/// Calculate the sine of the difference of two double angles.
+///
+/// Calls simd::perp_product of the two angles as vectors.
+/// @pre |params| <= 1
+/// @post |results| <= 1
+/// @param sin_a, cos_a the sine and cosine of angle a.
+/// @param sin_b, cos_b the sine and cosine of angle b.
+/// @return sin(a - b)
+[[nodiscard("Pure Function")]]
+inline constexpr auto sine_diff(const UnitNegRange<double> sin_a,
+                                const UnitNegRange<double> cos_a,
+                                const UnitNegRange<double> sin_b,
+                                const UnitNegRange<double> cos_b) noexcept
+    -> UnitNegRange<double> {
+  return UnitNegRange<double>::clamp(
+      simd::perp_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
+}
+
 /// Calculate the cosine of the difference of two angles.
 /// It is effectively the dot product of the two angles as vectors.
 /// @pre |params| <= 1
@@ -542,6 +561,22 @@ cosine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
     -> UnitNegRange<T> {
   return UnitNegRange<T>::clamp(
       vector2::dot_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
+}
+
+/// Calculate the cosine of the difference of two double angles.
+/// @pre |params| <= 1
+/// @post |results| <= 1
+/// @param sin_a, cos_a the sine and cosine of angle a.
+/// @param sin_b, cos_b the sine and cosine of angle b.
+/// @return cos(a - b)
+[[nodiscard("Pure Function")]]
+inline constexpr auto cosine_diff(const UnitNegRange<double> sin_a,
+                                  const UnitNegRange<double> cos_a,
+                                  const UnitNegRange<double> sin_b,
+                                  const UnitNegRange<double> cos_b) noexcept
+    -> UnitNegRange<double> {
+  return UnitNegRange<double>::clamp(
+      simd::dot_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
 }
 
 /// Calculate the sine of the sum of two angles.

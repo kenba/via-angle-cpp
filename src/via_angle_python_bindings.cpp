@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024-2025 Ken Barker
+// Copyright (c) 2024-2026 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -39,6 +39,12 @@ PYBIND11_MODULE(via_angle, m) {
   } catch (...) {
     return;
   }
+
+  // Python bindings for simd vector functions
+  m.def("dot_product", &via::simd::dot2d_product,
+        "2D vector dot product function: a . b.");
+  m.def("perp_product", &via::simd::perp_product,
+        "2D vector perp product function: a x b.");
 
   // Python bindings for constants
   m.attr("SQ_EPSILON") = via::trig::SQ_EPSILON<double>;
