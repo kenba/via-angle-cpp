@@ -1,7 +1,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2024-2025 Ken Barker
+// Copyright (c) 2024-2026 Ken Barker
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"),
@@ -25,6 +25,7 @@
 /// @brief Contains the via::trig namespace.
 //////////////////////////////////////////////////////////////////////////////
 #include "two_sum.hpp"
+#include "vector2.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
@@ -521,7 +522,8 @@ constexpr auto
 sine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
           const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
     -> UnitNegRange<T> {
-  return UnitNegRange<T>::clamp(sin_a.v() * cos_b.v() - sin_b.v() * cos_a.v());
+  return UnitNegRange<T>::clamp(
+      vector2::perp_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
 }
 
 /// Calculate the cosine of the difference of two angles.
@@ -538,7 +540,8 @@ constexpr auto
 cosine_diff(const UnitNegRange<T> sin_a, const UnitNegRange<T> cos_a,
             const UnitNegRange<T> sin_b, const UnitNegRange<T> cos_b) noexcept
     -> UnitNegRange<T> {
-  return UnitNegRange<T>::clamp(cos_a.v() * cos_b.v() + sin_a.v() * sin_b.v());
+  return UnitNegRange<T>::clamp(
+      vector2::dot_product(sin_a.v(), cos_a.v(), sin_b.v(), cos_b.v()));
 }
 
 /// Calculate the sine of the sum of two angles.
