@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "via_angle"
-version = "0.3.4"
+version = "1.0.0"
 
 [tool.scikit-build]
 cmake.build-type = "RelWithDebInfo"

@@ -41,7 +41,7 @@ PYBIND11_MODULE(via_angle, m) {
   }
 
   // Python bindings for simd vector functions
-  m.def("dot_product", &via::simd::dot2d_product,
+  m.def("dot_product", &via::simd::dot_product,
         "2D vector dot product function: a . b.");
   m.def("perp_product", &via::simd::perp_product,
         "2D vector perp product function: a x b.");
